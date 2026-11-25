@@ -286,7 +286,7 @@ function evCard(e){
 }
 /* ================= PROGRESS ================= */
 function weekBounds(off=0){
-  const t=new Date();const ws=settings.weekStart%7;
+  const t=new Date();const ws=wsNorm();
   let d=new Date(t);d.setDate(d.getDate()-(((wdIndex(t)-ws)+7)%7)-7*off);
   const s=dstr(d);d.setDate(d.getDate()+6);return [s,dstr(d)];
 }
@@ -347,11 +347,12 @@ function rCalendar(){
   h+=calMode==="month"?monthHTML():calMode==="week"?weekHTML():dayHTML();
   view.innerHTML=h;
 }
+function wsNorm(){return (settings.weekStart+6)%7} // getDay(1=Mon..0=Sun) -> WD index(0=Mon)
 function monthHTML(){
-  const y=cursor.getFullYear(),m=cursor.getMonth();
-  const startOff=(wdIndex(new Date(y,m,1))-settings.weekStart%7+7)%7;
+  const y=cursor.getFullYear(),m=cursor.getMonth(),ws=wsNorm();
+  const startOff=(wdIndex(new Date(y,m,1))-ws+7)%7;
   let h=`<div class="sect" style="text-align:center;font-size:15px;text-transform:none;letter-spacing:0">${MON[m]} ${y}</div><div class="mgrid">`;
-  for(let i=0;i<7;i++)h+=`<div class="wd">${WD[(settings.weekStart%7+i)%7]}</div>`;
+  for(let i=0;i<7;i++)h+=`<div class="wd">${WD[(ws+i)%7]}</div>`;
   let d=new Date(y,m,1-startOff);
   for(let i=0;i<42;i++){
     const ds=dstr(d),sh=shiftFor(ds),ev=evsOn(ds);
@@ -363,7 +364,7 @@ function monthHTML(){
   return h+"</div>";
 }
 function weekHTML(){
-  let base=parseD(selDay);const off=(wdIndex(base)-settings.weekStart%7+7)%7;base.setDate(base.getDate()-off);
+  let base=parseD(selDay);const off=(wdIndex(base)-wsNorm()+7)%7;base.setDate(base.getDate()-off);
   let h=`<div class="sect" style="text-align:center;text-transform:none;letter-spacing:0">Week of ${MON[base.getMonth()].slice(0,3)} ${base.getDate()}</div><div class="wgrid">`;
   for(let i=0;i<7;i++){
     const d=new Date(base);d.setDate(d.getDate()+i);const ds=dstr(d),sh=shiftFor(ds),ev=evsOn(ds);
