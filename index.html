@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#f2f2f7" id="metaTheme">
+<title>Daybook</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{
+  --bg:#f2f2f7; --card:#ffffff; --card2:#f9f9fb; --text:#1c1c1e; --sub:#6e6e73; --sep:#e2e2e7;
+  --accent:#0a84ff; --red:#ff3b30;
+  --dayAmber:#ffcc00; --eveOrange:#ff9500; --nightBlue:#0a3d91; --offGray:#aeaeb2; --trainGreen:#34c759;
+  --workout:#34c759; --content:#ff6330; --steel:#af52de; --task:#ff9500; --personal:#ff2d55;
+  --tintDay:rgba(255,204,0,.16); --tintEve:rgba(255,149,0,.16); --tintNight:rgba(10,61,145,.14); --tintOff:rgba(142,142,147,.10);
+}
+html[data-theme="dark"]{
+  --bg:#1c1c1e; --card:#2c2c2e; --card2:#242426; --text:#f2f2f7; --sub:#98989d; --sep:#3a3a3c;
+  --tintDay:rgba(255,204,0,.20); --tintEve:rgba(255,149,0,.20); --tintNight:rgba(40,90,190,.30); --tintOff:rgba(142,142,147,.16);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums;overscroll-behavior-y:none}
+#app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+header{padding:calc(env(safe-area-inset-top,0px) + 16px) 16px 8px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+header h1{font-size:32px;font-weight:700;letter-spacing:-.5px;margin:0;line-height:1.1}
+header .hdr-actions{display:flex;gap:8px;align-items:center;padding-bottom:4px}
+.hbtn{min-width:48px;height:40px;border:0;border-radius:12px;background:var(--card);color:var(--accent);font-size:15px;font-weight:600;padding:0 12px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.hbtn.icon{width:48px;padding:0;display:flex;align-items:center;justify-content:center}
+.hbtn svg{width:22px;height:22px}
+main{flex:1;overflow-y:auto;padding:4px 16px 96px;-webkit-overflow-scrolling:touch}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:40}
+nav .bar{max-width:480px;margin:0 auto;display:flex;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;color:var(--sub);font-size:11px;font-weight:500;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px;cursor:pointer}
+nav button svg{width:24px;height:24px}
+nav button.on{color:var(--accent)}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin:8px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.shift-card{display:flex;align-items:center;gap:14px}
+.shift-badge{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex:none}
+.shift-card .sc-t{font-size:17px;font-weight:700}
+.shift-card .sc-s{font-size:14px;color:var(--sub);margin-top:2px}
+.badge-D{background:var(--dayAmber);color:#5c4700}.badge-E{background:var(--eveOrange)}.badge-N{background:var(--nightBlue)}.badge-O{background:var(--offGray)}.badge-T{background:var(--trainGreen)}
+.ev{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:16px;padding:12px 14px;margin:8px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);border-left:5px solid var(--sub)}
+.ev .tm{font-size:13px;color:var(--sub);width:52px;flex:none;padding-top:2px;text-align:right}
+.ev .tt{font-size:16px;font-weight:600;line-height:1.25}
+.ev .ct{font-size:12px;color:var(--sub);margin-top:2px}
+.ev .att{font-size:14px;margin-left:2px}
+.ev.done .tt{text-decoration:line-through;color:var(--sub)}
+.ev .chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--sep);flex:none;margin-left:auto;align-self:center;background:none;cursor:pointer}
+.ev.done .chk{border-color:var(--trainGreen);background:var(--trainGreen)}
+.cat-workout{border-left-color:var(--workout)}.cat-content{border-left-color:var(--content)}.cat-steel{border-left-color:var(--steel)}.cat-task{border-left-color:var(--task)}.cat-personal{border-left-color:var(--personal)}
+.empty{padding:40px 24px;text-align:center;color:var(--sub);font-size:15px;line-height:1.5}
+.sect{font-size:13px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin:18px 4px 2px}
+.seg{display:flex;background:var(--card);border-radius:12px;padding:3px;margin:6px 0 10px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:9px 0;font-size:15px;font-weight:600;color:var(--sub);min-height:44px;cursor:pointer}
+.seg button.on{background:var(--card2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mgrid .wd{font-size:12px;font-weight:600;color:var(--sub);text-align:center;padding:6px 0}
+.mcell{aspect-ratio:.82;border-radius:10px;background:var(--card);padding:5px 4px 4px;display:flex;flex-direction:column;align-items:center;cursor:pointer;border:0;font:inherit;color:var(--text)}
+.mcell.dim{opacity:.35}
+.mcell .dn{font-size:16px;font-weight:600;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.mcell.today .dn{background:var(--red);color:#fff}
+.mcell.sel .dn{box-shadow:0 0 0 2px var(--accent)}
+.mcell .sl{font-size:10px;font-weight:800;margin-top:1px;border-radius:5px;padding:0 5px;line-height:16px}
+.mcell .dots{display:flex;gap:3px;margin-top:auto;padding-bottom:2px;min-height:6px}
+.mcell .dots i{width:6px;height:6px;border-radius:50%;display:block}
+.tint-D{background:var(--tintDay)}.tint-E{background:var(--tintEve)}.tint-N{background:var(--tintNight)}.tint-O{background:var(--tintOff)}
+.wgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wcol{background:var(--card);border-radius:12px;min-height:220px;padding:4px;display:flex;flex-direction:column;gap:4px;cursor:pointer;border:0;font:inherit;color:var(--text);text-align:center}
+.wcol .wd{font-size:11px;color:var(--sub);font-weight:600}
+.wcol .dn{font-size:16px;font-weight:700;width:30px;height:30px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.wcol.today .dn{background:var(--red);color:#fff}
+.wcol .sband{height:8px;border-radius:4px}
+.wcol .wev{font-size:10px;font-weight:600;border-radius:6px;padding:3px 2px;line-height:1.2;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl{position:relative;background:var(--card);border-radius:16px;margin-top:6px;overflow:hidden}
+.tl .hr{height:48px;border-top:1px solid var(--sep);position:relative}
+.tl .hr span{position:absolute;top:-8px;left:8px;font-size:11px;color:var(--sub)}
+.tl .region{position:absolute;left:56px;right:0;opacity:.5;pointer-events:none}
+.tl .tlev{position:absolute;left:60px;right:8px;border-radius:10px;padding:6px 10px;color:#fff;font-size:13px;font-weight:600;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18);border:0;text-align:left;cursor:pointer}
+.tl .tlev small{display:block;font-weight:500;opacity:.85}
+.nowline{position:absolute;left:52px;right:0;height:2px;background:var(--red);z-index:5;pointer-events:none}
+.nowline::before{content:"";position:absolute;left:-6px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--red)}
+.allday{display:flex;gap:6px;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--sep)}
+.allday .chip{border-radius:8px;padding:5px 10px;color:#fff;font-size:12px;font-weight:600;border:0;cursor:pointer}
+.rot{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0}
+.rot button{aspect-ratio:1;border-radius:12px;border:0;font-size:16px;font-weight:800;color:#fff;cursor:pointer;min-height:48px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--sub)}
+.legend b{display:inline-flex;width:22px;height:22px;border-radius:7px;color:#fff;align-items:center;justify-content:center;font-size:12px;margin-right:4px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:none}
+.overlay.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg);border-radius:20px 20px 0 0;max-width:480px;margin:0 auto;max-height:88vh;max-height:88dvh;overflow-y:auto;transform:translateY(105%);transition:transform .28s ease;padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.sheet.open{transform:translateY(0)}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--sep);margin:6px auto 10px}
+.sheet h2{font-size:20px;margin:4px 0 12px}
+.frm{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.frow{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--sep);min-height:48px}
+.frow:first-child{border-top:0}
+.frow label{width:82px;font-size:15px;flex:none}
+.frow input,.frow textarea{flex:1;border:0;background:none;font:inherit;color:var(--text);font-size:15px;outline:none;min-height:32px;font-family:inherit}
+textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
+.chip{border:2px solid var(--sep);background:none;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--sub);cursor:pointer;min-height:44px}
+.chip.on{color:#fff;border-color:transparent}
+.bigbtn{width:100%;border:0;border-radius:14px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;padding:14px;min-height:56px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.bigbtn.small{font-size:15px;min-height:48px;padding:10px}
+.danger{background:var(--red)!important;color:#fff!important}
+.ghost{background:var(--card);color:var(--red)}
+.qa-hero{background:var(--card);border-radius:16px;padding:16px;margin:8px 0;border-left:5px solid var(--steel)}
+.qa-hero .d{font-size:13px;color:var(--steel);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.qa-hero .t{font-size:19px;font-weight:700;margin-top:4px}
+.qa-hero .s{font-size:14px;color:var(--sub);margin-top:4px;line-height:1.45}
+.streak{display:inline-flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--eveOrange);margin:4px 0}
+.filerow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin:8px 0}
+.filerow .fi{width:40px;height:40px;border-radius:10px;background:var(--steel);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none}
+.filerow .fn{flex:1;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.filerow .fd{font-size:12px;color:var(--sub)}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%}
+.toast.show{opacity:1}
+.detail-hero{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px}
+.detail-hero .dt{font-size:22px;font-weight:700;line-height:1.2}
+.detail-hero .dm{font-size:14px;color:var(--sub);margin-top:6px}
+.detail-hero pre{white-space:pre-wrap;font-family:inherit;font-size:15px;line-height:1.55;margin:12px 0 0;color:var(--text)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 id="hdrTitle">Today</h1>
+    <div class="hdr-actions">
+      <button class="hbtn" id="btnToday" style="display:none">Today</button>
+      <button class="hbtn icon" id="btnAdd" aria-label="Add event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="hbtn icon" id="btnSettings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.65 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.12 3V3a2 2 0 1 1 4 0v.09c0 .68.4 1.3 1.03 1.56.6.26 1.32.13 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08c.26.63.88 1.03 1.56 1.03H21a2 2 0 1 1 0 4h-.09c-.68 0-1.3.4-1.51 1.03z"/></svg></button>
+    </div>
+  </header>
+  <main id="view"></main>
+  <nav><div class="bar">
+    <button data-tab="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Today</button>
+    <button data-tab="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Calendar</button>
+    <button data-tab="shifts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>Shifts</button>
+    <button data-tab="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7.5h8M8 11h5"/></svg>Q&amp;A</button>
+    <button data-tab="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20v-7M12 20V6M19 20v-11"/></svg>Progress</button>
+  </div></nav>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+/* ================= data ================= */
+const LS_E="daybook.events.v2", LS_S="daybook.settings.v1", LS_SEED="daybook.seeded.v2";
+const CATS={workout:{n:"Workout",c:"var(--workout)"},content:{n:"Publish",c:"var(--content)"},steel:{n:"Steel Q&A",c:"var(--steel)"},task:{n:"Task",c:"var(--task)"},personal:{n:"Personal",c:"var(--personal)"}};
+const SHIFT_META={D:{n:"Morning",c:"var(--dayAmber)"},E:{n:"Afternoon",c:"var(--eveOrange)"},N:{n:"Night",c:"var(--nightBlue)"},O:{n:"Off",c:"var(--offGray)"},T:{n:"Training",c:"var(--trainGreen)"}};
+const WARM="Warm-up 8-10 min: light cardio + joint circles, then 2 warm-up sets of the first move (50% / 70% of working weight). Rest 90-120s between big sets, 60s between small ones. Stop every set 1-2 reps before failure.";
+const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. Floor press (barbell, lying on floor) - 3 x 8-12\n3. Bent-over barbell row - 3 x 8-12\n4. Dumbbell overhead press - 2 x 10-12\n5. Plank - 3 x 30-60 sec\n\n"+WARM;
+const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
+const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
+const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
+const SEED=[
+{id:"pubfb-2026-11-25",title:"Eiffel Reel \u2014 Tiny Wins FB",date:"2026-11-25",time:"19:00",end:"",cat:"content",note:"",link:"https://www.facebook.com/tiny.wins.2026",attach:"",log:"",status:"open",done:false,details:"Post the Eiffel Reel on the Tiny Wins Facebook page.\nYouTube version: https://youtube.com/shorts/sZyE8uX7cvs\nPage: https://www.facebook.com/tiny.wins.2026"},
+{id:"tt-2026-11-26",title:"TikTok clip 3 post (reminder)",date:"2026-11-26",time:"00:55",end:"",cat:"task",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post TikTok clip 3 (planned around 1am Cairo).\nAfter posting, edit this event and paste the clip link."},
+{id:"wo-2026-11-26",title:"Workout - Session A (proposed)",date:"2026-11-26",time:"10:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_A},
+{id:"qa-2026-11-26",title:"Daily 20 Q&A steel file",date:"2026-11-26",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 1 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-11-26",title:"Tiny Wins Reel slot (story TBD)",date:"2026-11-26",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"wi-2026-11-27",title:"Weekly weigh-in + hair photo",date:"2026-11-27",time:"08:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Morning weigh-in: after the bathroom, before food, same scale.\n1. Log the number in the Log field below.\n2. Take the hair-shed photo (shower drain) after your shower.\n3. Send both to Farid for the Friday check-in."},
+{id:"qa-2026-11-27",title:"Daily 20 Q&A steel file",date:"2026-11-27",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 2 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pubfb-2026-11-27",title:"Smalls Reel \u2014 Tiny Wins FB",date:"2026-11-27",time:"19:00",end:"",cat:"content",note:"",link:"https://www.facebook.com/tiny.wins.2026",attach:"",log:"",status:"open",done:false,details:"Post the Smalls Reel on the Tiny Wins Facebook page.\nYouTube version: https://youtube.com/shorts/qALQrQZtMlg\nPage: https://www.facebook.com/tiny.wins.2026"},
+{id:"wo-2026-11-28",title:"Workout - Session B (proposed)",date:"2026-11-28",time:"09:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_B},
+{id:"qa-2026-11-28",title:"Daily 20 Q&A steel file",date:"2026-11-28",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 3 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-11-28",title:"Tiny Wins Reel slot (story TBD)",date:"2026-11-28",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"qa-2026-11-29",title:"Daily 20 Q&A steel file",date:"2026-11-29",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 4 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"wo-2026-11-30",title:"Workout - Session C (proposed)",date:"2026-11-30",time:"09:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_C},
+{id:"qa-2026-11-30",title:"Daily 20 Q&A steel file",date:"2026-11-30",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 5 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"qa-2026-12-01",title:"Daily 20 Q&A steel file",date:"2026-12-01",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 6 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-01",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-01",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"wo-2026-12-02",title:"Workout - Session A (proposed)",date:"2026-12-02",time:"09:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_A},
+{id:"qa-2026-12-02",title:"Daily 20 Q&A steel file",date:"2026-12-02",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 7 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-02",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-02",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"qa-2026-12-03",title:"Daily 20 Q&A steel file",date:"2026-12-03",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 8 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-03",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-03",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"wi-2026-12-04",title:"Weekly weigh-in + hair photo",date:"2026-12-04",time:"08:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Morning weigh-in: after the bathroom, before food, same scale.\n1. Log the number in the Log field below.\n2. Take the hair-shed photo (shower drain) after your shower.\n3. Send both to Farid for the Friday check-in."},
+{id:"wo-2026-12-04",title:"Workout - Session B (proposed)",date:"2026-12-04",time:"10:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_B},
+{id:"qa-2026-12-04",title:"Daily 20 Q&A steel file",date:"2026-12-04",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 9 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"qa-2026-12-05",title:"Daily 20 Q&A steel file",date:"2026-12-05",time:"10:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 10 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-05",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-05",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"qa-2026-12-06",title:"Daily 20 Q&A steel file",date:"2026-12-06",time:"10:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 11 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"qa-2026-12-07",title:"Daily 20 Q&A steel file",date:"2026-12-07",time:"10:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 12 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"wo-2026-12-07",title:"Workout - Session C (proposed)",date:"2026-12-07",time:"16:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_C},
+{id:"qa-2026-12-08",title:"Daily 20 Q&A steel file",date:"2026-12-08",time:"10:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 13 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-08",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-08",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"qa-2026-12-09",title:"Daily 20 Q&A steel file",date:"2026-12-09",time:"10:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 14 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"wo-2026-12-09",title:"Workout - Session A (proposed)",date:"2026-12-09",time:"16:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:PLAN_A},
+{id:"pub-2026-12-09",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-09",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"qa-2026-12-10",title:"Daily 20 Q&A steel file",date:"2026-12-10",time:"18:00",end:"",cat:"steel",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Day 15 of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."},
+{id:"pub-2026-12-10",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-10",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"wi-2026-12-11",title:"Weekly weigh-in + hair photo",date:"2026-12-11",time:"08:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Morning weigh-in: after the bathroom, before food, same scale.\n1. Log the number in the Log field below.\n2. Take the hair-shed photo (shower drain) after your shower.\n3. Send both to Farid for the Friday check-in."},
+{id:"pub-2026-12-12",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-12",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"pub-2026-12-15",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-15",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"pub-2026-12-16",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-16",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"pub-2026-12-17",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-17",time:"19:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+{id:"wi-2026-12-18",title:"Weekly weigh-in + hair photo",date:"2026-12-18",time:"08:00",end:"",cat:"workout",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Morning weigh-in: after the bathroom, before food, same scale.\n1. Log the number in the Log field below.\n2. Take the hair-shed photo (shower drain) after your shower.\n3. Send both to Farid for the Friday check-in."},
+{id:"pub-2026-12-19",title:"Tiny Wins Reel slot (story TBD)",date:"2026-12-19",time:"21:00",end:"",cat:"content",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."},
+];
+let settings=Object.assign({weekStart:1,theme:"auto",remind:false,
+  rot:{anchor:"2026-11-21",pattern:["N","N","N","N","N","O","O","E","E","E","E","E","O","O","D","D","D","D","D","O","O"],
+       times:{D:["06:00","14:00"],E:["14:00","22:00"],N:["22:00","06:00"]}}
+},load(LS_S)||{});
+let events=load(LS_E)||[];
+if(!localStorage.getItem(LS_SEED)){events=SEED.concat(events.filter(e=>!/^seed-/.test(e.id)));localStorage.setItem(LS_SEED,"1");save()}
+events.forEach(e=>{if(!e.status)e.status=e.done?"done":"open";e.done=e.status==="done"});
+function load(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function save(){localStorage.setItem(LS_E,JSON.stringify(events));localStorage.setItem(LS_S,JSON.stringify(settings));mirror()}
+function uid(){return "e"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+/* ================= IndexedDB (files + mirror) ================= */
+let db;
+function idb(){return new Promise((res,rej)=>{if(db)return res(db);
+  const r=indexedDB.open("daybook",1);
+  r.onupgradeneeded=()=>{r.result.createObjectStore("files",{keyPath:"name"});r.result.createObjectStore("mirror",{keyPath:"id"})};
+  r.onsuccess=()=>{db=r.result;res(db)};r.onerror=()=>rej(r.error)})}
+function idbPut(store,val){return idb().then(d=>new Promise((res,rej)=>{const tx=d.transaction(store,"readwrite");tx.objectStore(store).put(val);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)}))}
+function idbAll(store){return idb().then(d=>new Promise((res,rej)=>{const q=d.transaction(store).objectStore(store).getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)}))}
+function idbDel(store,key){return idb().then(d=>new Promise((res,rej)=>{const tx=d.transaction(store,"readwrite");tx.objectStore(store).delete(key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)}))}
+function mirror(){idbAll("mirror").then(old=>Promise.all(old.map(o=>idbDel("mirror",o.id))).then(()=>Promise.all(events.map(e=>idbPut("mirror",{id:e.id,title:e.title,date:e.date,time:e.time,details:e.details||"",link:e.link||""}))))).catch(()=>{})}
+/* ================= dates ================= */
+const pad=n=>String(n).padStart(2,"0");
+const dstr=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const todayStr=()=>dstr(new Date());
+function parseD(s){const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)}
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const WD=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],WD_FULL=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function wdIndex(d){return (d.getDay()+6)%7}
+function fmtTime(t){if(!t)return"";const[h,m]=t.split(":").map(Number);const ap=h>=12?"PM":"AM";return ((h+11)%12+1)+":"+pad(m)+" "+ap}
+function niceDate(s){const d=parseD(s);return WD_FULL[wdIndex(d)]+", "+MON[d.getMonth()].slice(0,3)+" "+d.getDate()}
+/* ================= shifts ================= */
+function shiftFor(ds){const a=parseD(settings.rot.anchor),d=parseD(ds);
+  const L=settings.rot.pattern.length;let i=((Math.round((d-a)/86400000))%L+L)%L;
+  const k=settings.rot.pattern[i]||"O";const t=settings.rot.times[k];
+  return {key:k,name:SHIFT_META[k].name,start:t?t[0]:null,end:t?t[1]:null}}
+/* ================= theme ================= */
+function applyTheme(){let th=settings.theme;if(th==="auto"){const h=new Date().getHours();th=(h>=18||h<6)?"dark":"light"}
+  document.documentElement.setAttribute("data-theme",th);
+  document.getElementById("metaTheme").setAttribute("content",th==="dark"?"#1c1c1e":"#f2f2f7")}
+/* ================= state ================= */
+let tab="today",calMode="month",cursor=new Date(),selDay=todayStr();
+const view=document.getElementById("view");
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function evsOn(ds){return events.filter(e=>e.date===ds).sort((a,b)=>(a.time||"99")<(b.time||"99")?-1:1)}
+function evById(id){return events.find(e=>e.id===id)}
+const deepLink=id=>location.origin+location.pathname+"#/event/"+id;
+/* ================= render root ================= */
+const TITLES={today:"Today",calendar:"Calendar",shifts:"Shifts",qa:"Q&A",progress:"Progress"};
+function render(){applyTheme();
+  document.getElementById("hdrTitle").textContent=TITLES[tab];
+  document.getElementById("btnToday").style.display=(tab==="calendar")?"":"none";
+  document.getElementById("btnAdd").style.display=(tab==="today"||tab==="calendar")?"":"none";
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
+  ({today:rToday,calendar:rCalendar,shifts:rShifts,qa:rQA,progress:rProgress}[tab])();
+  scheduleReminders();
+}
+/* ================= TODAY ================= */
+function rToday(){
+  const ds=todayStr(),sh=shiftFor(ds),list=evsOn(ds);
+  const now=new Date(),hm=pad(now.getHours())+":"+pad(now.getMinutes());
+  let status;
+  if(sh.key==="O")status="Day off. Recover well.";
+  else{const s=sh.start,e=sh.end,over=e<s;const inShift=over?(hm>=s||hm<e):(hm>=s&&hm<e);
+    status=inShift?("On shift now · ends "+fmtTime(e)):(hm<s?("Starts "+fmtTime(s)):"Done for today")}
+  let h=`<div class="card shift-card"><div class="shift-badge badge-${sh.key}">${sh.key}</div>
+    <div><div class="sc-t">${sh.name}${sh.key!=="O"?" shift":""}</div>
+    <div class="sc-s">${sh.key!=="O"?fmtTime(sh.start)+" – "+fmtTime(sh.end)+" · ":""}${status}</div>
+    <div class="sc-s">${niceDate(ds)}</div></div></div><div class="sect">Today's items</div>`;
+  if(!list.length)h+=`<div class="empty">Nothing scheduled today.<br>Enjoy the calm, Captain.</div>`;
+  list.forEach(e=>{h+=evCard(e)});
+  view.innerHTML=h;
+}
+function evCard(e){
+  const att=(e.link?" 🔗":"")+(e.attach?" 📎":"")+(e.details?" 📋":"");
+  const st=e.status==="skipped"?`<span style="color:var(--red)"> · skipped</span>`:"";
+  return `<div class="ev cat-${e.cat}${e.done?" done":""}" data-id="${e.id}">
+    <div class="tm">${e.time?fmtTime(e.time):"—"}</div>
+    <div style="flex:1"><div class="tt">${esc(e.title)}<span class="att">${att}</span></div><div class="ct">${CATS[e.cat].n}${st}${e.note?" · "+esc(e.note):""}</div></div>
+    <button class="chk" data-chk="${e.id}" aria-label="Mark done"></button></div>`;
+}
+/* ================= PROGRESS ================= */
+function weekBounds(off=0){
+  const t=new Date();const ws=settings.weekStart%7;
+  let d=new Date(t);d.setDate(d.getDate()-(((wdIndex(t)-ws)+7)%7)-7*off);
+  const s=dstr(d);d.setDate(d.getDate()+6);return [s,dstr(d)];
+}
+function weekStats(off=0){
+  const[s,e2]=weekBounds(off);const ds=todayStr();
+  const wk=events.filter(e=>e.date>=s&&e.date<=(off===0&&e2>ds?ds:e2));
+  const done=wk.filter(e=>e.status==="done").length,skip=wk.filter(e=>e.status==="skipped").length;
+  const open=wk.length-done-skip;
+  const pct=(done+skip)?Math.round(done/(done+skip)*100):(done?100:0);
+  return {done,skip,open,pct,total:wk.length,s,e:e2};
+}
+function streakOf(cat){
+  let n=0,d=new Date();
+  const todayE=events.find(e=>e.cat===cat&&e.date===dstr(d));
+  if(!todayE||todayE.status!=="done")d.setDate(d.getDate()-1);
+  for(;;){const e=events.find(x=>x.cat===cat&&x.date===dstr(d));
+    if(e&&e.status==="done"){n++;d.setDate(d.getDate()-1)}
+    else if(e&&e.status==="skipped")break;
+    else break}
+  return n;
+}
+function rProgress(){
+  const w=weekStats(0),w1=weekStats(1),w2=weekStats(2),w3=weekStats(3);
+  const qaS=streakOf("steel"),woS=streakOf("workout");
+  const bar=(st,lab)=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13px;color:var(--sub)"><span>${lab}</span><span>${st.done}/${st.done+st.skip} done${st.open?" · "+st.open+" open":""}</span></div>
+    <div style="height:10px;border-radius:6px;background:var(--sep);margin-top:5px;overflow:hidden;display:flex">
+    <div style="width:${st.pct}%;background:var(--trainGreen)"></div>
+    <div style="width:${(st.done+st.skip)?100-st.pct:0}%;background:var(--red);opacity:.55"></div></div></div>`;
+  let h=`<div class="card" style="text-align:center;padding:20px">
+    <div style="font-size:52px;font-weight:800;color:${w.pct>=70?"var(--trainGreen)":w.pct>=40?"var(--eveOrange)":"var(--red)"}">${w.done+w.skip?w.pct+"%":"—"}</div>
+    <div style="color:var(--sub);font-size:14px;margin-top:2px">this week · ${w.done} done · ${w.skip} skipped · ${w.open} still open</div></div>
+    <div style="display:flex;gap:8px">
+    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--steel)">&#128293; ${qaS}</div><div style="font-size:12px;color:var(--sub)">Q&amp;A streak</div></div>
+    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--workout)">&#128170; ${woS}</div><div style="font-size:12px;color:var(--sub)">Workout streak</div></div></div>
+    <div class="card">${bar(w,"This week")}${bar(w1,"Last week")}${bar(w2,"2 weeks ago")}${bar(w3,"3 weeks ago")}</div>`;
+  const skipped=events.filter(e=>e.status==="skipped").sort((a,b)=>a.date>b.date?-1:1).slice(0,5);
+  if(skipped.length){h+=`<div class="sect">Recently skipped</div>`;
+    skipped.forEach(e=>{h+=`<div class="ev cat-${e.cat}" data-open="${e.id}"><div class="tm">${WD[wdIndex(parseD(e.date))]} ${parseD(e.date).getDate()}</div><div style="flex:1"><div class="tt" style="font-size:15px">${esc(e.title)}</div><div class="ct">${CATS[e.cat].n} — tap to reschedule or do it</div></div></div>`})}
+  h+=`<div class="sect">Coaching</div>
+    <button class="bigbtn" id="pShare">Share progress with Farid</button>
+    <div style="font-size:13px;color:var(--sub);text-align:center;padding:0 12px 8px">Sends a short summary you approve first — nothing leaves the phone on its own.</div>`;
+  view.innerHTML=h;
+  document.getElementById("pShare").onclick=shareProgress;
+}
+function shareProgress(){
+  const w=weekStats(0),w1=weekStats(1);
+  const lines=[`Daybook progress — week of ${niceDate(w.s).split(", ")[1]}:`,`Done ${w.done} · skipped ${w.skip} · open ${w.open} → ${w.done+w.skip?w.pct+"%":"—"}`,`Last week: done ${w1.done} · skipped ${w1.skip} → ${w1.done+w1.skip?w1.pct+"%":"—"}`,`Streaks: Q&A ${streakOf("steel")} days · workouts ${streakOf("workout")} days`];
+  const skipped=events.filter(e=>e.status==="skipped"&&e.date>=w.s).map(e=>"- "+e.title+" ("+e.date+")");
+  if(skipped.length)lines.push("Skipped this week:",...skipped);
+  const txt=lines.join("\n");
+  if(navigator.share)navigator.share({text:txt}).catch(()=>{});
+  else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>toast("Summary copied — paste it to Farid"));
+  else toast("Sharing is not available here");
+}
+/* ================= CALENDAR ================= */
+function rCalendar(){
+  let h=`<div class="seg"><button data-m="month"${calMode==="month"?' class="on"':""}>Month</button><button data-m="week"${calMode==="week"?' class="on"':""}>Week</button><button data-m="day"${calMode==="day"?' class="on"':""}>Day</button></div>`;
+  h+=calMode==="month"?monthHTML():calMode==="week"?weekHTML():dayHTML();
+  view.innerHTML=h;
+}
+function monthHTML(){
+  const y=cursor.getFullYear(),m=cursor.getMonth();
+  const startOff=(wdIndex(new Date(y,m,1))-settings.weekStart%7+7)%7;
+  let h=`<div class="sect" style="text-align:center;font-size:15px;text-transform:none;letter-spacing:0">${MON[m]} ${y}</div><div class="mgrid">`;
+  for(let i=0;i<7;i++)h+=`<div class="wd">${WD[(settings.weekStart%7+i)%7]}</div>`;
+  let d=new Date(y,m,1-startOff);
+  for(let i=0;i<42;i++){
+    const ds=dstr(d),sh=shiftFor(ds),ev=evsOn(ds);
+    let dots="";ev.slice(0,3).forEach(e=>{dots+=`<i style="background:${CATS[e.cat].c}"></i>`});
+    h+=`<button class="mcell tint-${sh.key}${d.getMonth()!==m?" dim":""}${ds===todayStr()?" today":""}${ds===selDay?" sel":""}" data-day="${ds}">
+      <span class="dn">${d.getDate()}</span><span class="sl badge-${sh.key}">${sh.key}</span><span class="dots">${dots}</span></button>`;
+    d.setDate(d.getDate()+1);
+  }
+  return h+"</div>";
+}
+function weekHTML(){
+  let base=parseD(selDay);const off=(wdIndex(base)-settings.weekStart%7+7)%7;base.setDate(base.getDate()-off);
+  let h=`<div class="sect" style="text-align:center;text-transform:none;letter-spacing:0">Week of ${MON[base.getMonth()].slice(0,3)} ${base.getDate()}</div><div class="wgrid">`;
+  for(let i=0;i<7;i++){
+    const d=new Date(base);d.setDate(d.getDate()+i);const ds=dstr(d),sh=shiftFor(ds),ev=evsOn(ds);
+    let blocks="";ev.slice(0,5).forEach(e=>{blocks+=`<span class="wev" style="background:${CATS[e.cat].c}">${e.time?e.time+" ":""}${esc(e.title.split("(")[0].slice(0,14))}</span>`});
+    h+=`<button class="wcol${ds===todayStr()?" today":""}" data-day="${ds}"><span class="wd">${WD[wdIndex(d)]}</span><span class="dn">${d.getDate()}</span><span class="sband badge-${sh.key}"></span>${blocks}</button>`;
+  }
+  return h+"</div>";
+}
+function dayHTML(){
+  const ds=selDay,sh=shiftFor(ds),list=evsOn(ds),H=48;
+  const timed=list.filter(e=>e.time),unt=list.filter(e=>!e.time);
+  let h=`<div class="sect" style="text-align:center;text-transform:none;letter-spacing:0">${niceDate(ds)} · ${sh.name}${sh.key!=="O"?" "+fmtTime(sh.start)+"–"+fmtTime(sh.end):""}</div>`;
+  if(unt.length){h+=`<div class="allday">`;unt.forEach(e=>{h+=`<button class="chip" style="background:${CATS[e.cat].c}" data-open="${e.id}">${esc(e.title)}</button>`});h+=`</div>`}
+  h+=`<div class="tl">`;
+  for(let i=0;i<24;i++)h+=`<div class="hr"><span>${pad(i)}:00</span></div>`;
+  if(sh.key!=="O"&&sh.start){
+    const s=parseInt(sh.start)*60,e2=parseInt(sh.end)*60+(sh.end<sh.start?1440:0);
+    h+=`<div class="region tint-${sh.key}" style="top:${s/60*H}px;height:${Math.min((e2-s)/60*H,24*H-s/60*H)}px"></div>`;
+  }
+  timed.forEach(e=>{
+    const[hh,mm]=e.time.split(":").map(Number);const top=(hh*60+mm)/60*H;
+    let dur=60;if(e.end){const[eh,em]=e.end.split(":").map(Number);dur=Math.max(30,(eh*60+em)-(hh*60+mm))}
+    h+=`<button class="tlev" style="top:${top+2}px;height:${Math.min(dur,1440)/60*H-6}px;background:${CATS[e.cat].c}" data-open="${e.id}">${esc(e.title)}<small>${fmtTime(e.time)}${e.end?" – "+fmtTime(e.end):""} · ${CATS[e.cat].n}</small></button>`;
+  });
+  if(ds===todayStr()){const n=new Date();h+=`<div class="nowline" style="top:${(n.getHours()*60+n.getMinutes())/60*H}px"></div>`}
+  h+=`</div>`;
+  if(!list.length)h+=`<div class="empty">Nothing on this day yet.<br>Tap + to add something.</div>`;
+  return h;
+}
+/* ================= SHIFTS ================= */
+function rShifts(){
+  const p=settings.rot.pattern;
+  let h=`<div class="card"><div class="legend">
+    <span><b class="badge-D">D</b>Morning ${fmtTime(settings.rot.times.D[0])}–${fmtTime(settings.rot.times.D[1])}</span>
+    <span><b class="badge-E">E</b>Afternoon ${fmtTime(settings.rot.times.E[0])}–${fmtTime(settings.rot.times.E[1])}</span>
+    <span><b class="badge-N">N</b>Night ${fmtTime(settings.rot.times.N[0])}–${fmtTime(settings.rot.times.N[1])}</span>
+    <span><b class="badge-O">O</b>Off</span></div></div>`;
+  h+=`<div class="sect">Rotation (${p.length} days) — tap a day to change it</div><div class="rot">`;
+  p.forEach((k,i)=>{h+=`<button class="badge-${k}" data-rot="${i}">${k}</button>`});
+  h+=`</div><div class="frm"><div class="frow"><label>Cycle starts</label><input type="date" id="anchorIn" value="${settings.rot.anchor}"></div>`;
+  for(const k of["D","E","N"])h+=`<div class="frow"><label>${SHIFT_META[k].n}</label><input type="time" id="t${k}0" value="${settings.rot.times[k][0]}"><span style="color:var(--sub)">to</span><input type="time" id="t${k}1" value="${settings.rot.times[k][1]}"></div>`;
+  h+=`</div><button class="bigbtn" id="saveRot">Save rotation</button><div class="sect">Next 14 days</div>`;
+  const t=new Date();
+  for(let i=0;i<14;i++){const d=new Date(t);d.setDate(d.getDate()+i);const ds=dstr(d),sh=shiftFor(ds);
+    h+=`<div class="ev" style="border-left-color:${SHIFT_META[sh.key].c}"><div class="tm">${WD[wdIndex(d)]} ${d.getDate()}</div><div style="flex:1"><div class="tt" style="font-size:15px">${sh.name}${sh.key!=="O"?" shift":""}</div><div class="ct">${sh.key!=="O"?fmtTime(sh.start)+" – "+fmtTime(sh.end):"Rest"}</div></div><span class="sl badge-${sh.key}" style="width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;color:${sh.key==="D"?"#5c4700":"#fff"}">${sh.key}</span></div>`}
+  view.innerHTML=h;
+}
+/* ================= QA ================= */
+function rQA(){
+  const qa=events.filter(e=>e.cat==="steel").sort((a,b)=>a.date<b.date?-1:1);
+  const ds=todayStr(),todayEv=qa.find(e=>e.date===ds);
+  let streak=0;{let d=new Date();if(!todayEv||!todayEv.done)d.setDate(d.getDate()-1);
+    for(;;){const e=qa.find(x=>x.date===dstr(d));if(e&&e.done){streak++;d.setDate(d.getDate()-1)}else break}}
+  let h=streak?`<span class="streak">&#128293; ${streak}-day streak</span>`:"";
+  if(todayEv){const dayN=qa.indexOf(todayEv)+1;
+    h+=`<div class="qa-hero"><div class="d">Today's steel Q&amp;A · Day ${dayN}</div><div class="t">${esc(todayEv.title)}</div>
+      <div class="s">${fmtTime(todayEv.time)} · Read the file, answer out loud, then mark it done.</div></div>
+      <button class="bigbtn" data-openfile="${todayEv.id}">Open today's file</button>
+      <div class="ev cat-steel${todayEv.done?" done":""}"><div class="tm">${fmtTime(todayEv.time)}</div><div style="flex:1"><div class="tt">Mark today's session</div><div class="ct">20 questions · about 15 minutes</div></div><button class="chk" data-chk="${todayEv.id}"></button></div>`;
+  }else h+=`<div class="empty">No Q&amp;A slot today.<br>The next one is coming — keep the streak alive.</div>`;
+  h+=`<div class="sect">Upcoming</div>`;
+  qa.filter(e=>e.date>=ds).slice(0,7).forEach(e=>{const i=qa.indexOf(e)+1;
+    h+=`<div class="ev cat-steel${e.done?" done":""}" data-open="${e.id}"><div class="tm">${WD[wdIndex(parseD(e.date))]} ${parseD(e.date).getDate()}</div><div style="flex:1"><div class="tt">Day ${i} · Steel Q&amp;A</div><div class="ct">${fmtTime(e.time)}</div></div><button class="chk" data-chk="${e.id}"></button></div>`});
+  h+=`<div class="sect">Study files</div><div id="fileList"></div>
+      <button class="bigbtn small" id="addFile" style="background:var(--card);color:var(--accent)">Add a file (PDF)</button>
+      <input type="file" id="fileIn" accept="application/pdf" style="display:none">`;
+  view.innerHTML=h;
+  renderFiles();
+  document.getElementById("addFile").onclick=()=>document.getElementById("fileIn").click();
+  document.getElementById("fileIn").onchange=ev=>{
+    const f=ev.target.files[0];if(!f)return;
+    idbPut("files",{name:f.name,type:f.type,blob:f,added:Date.now()}).then(()=>{renderFiles();toast("File saved")});
+  };
+}
+function renderFiles(){
+  idbAll("files").then(fs=>{
+    const el=document.getElementById("fileList");if(!el)return;
+    el.innerHTML=fs.length?fs.sort((a,b)=>b.added-a.added).map(f=>`<div class="filerow"><div class="fi">PDF</div><div style="flex:1;min-width:0"><div class="fn">${esc(f.name)}</div><div class="fd">${new Date(f.added).toDateString().slice(4)}</div></div><button class="hbtn" data-fopen="${esc(f.name)}">Open</button><button class="hbtn icon" data-fdel="${esc(f.name)}" aria-label="Delete file" style="color:var(--red)">✕</button></div>`).join("")
+      :`<div class="empty" style="padding:16px">No files yet. When Farid sends a study PDF on WhatsApp, save it here to open it from the app.</div>`;
+  }).catch(()=>{});
+}
+function openFile(name){idbAll("files").then(fs=>{const f=fs.find(x=>x.name===name);if(!f){toast("File not on this phone");return}
+  window.open(URL.createObjectURL(new Blob([f.blob],{type:f.type||"application/pdf"})),"_blank")})}
+function openEventFile(e){
+  if(e.attach){openFile(e.attach);return}
+  window.open("files/"+e.id+".pdf","_blank"); // repo-hosted convention: files/qa-YYYY-MM-DD.pdf
+}
+/* ================= detail sheet ================= */
+const sheet=document.getElementById("sheet"),overlay=document.getElementById("overlay");
+function openSheet(html){sheet.innerHTML=`<div class="grab"></div>`+html;sheet.classList.add("open");overlay.classList.add("open")}
+function closeSheet(){sheet.classList.remove("open");overlay.classList.remove("open");history.replaceState(null,"",location.pathname)}
+overlay.onclick=closeSheet;
+function openDetail(id){
+  const e=evById(id);if(!e)return;
+  history.replaceState(null,"","#/event/"+id);
+  const sh=shiftFor(e.date);
+  let h=`<div class="detail-hero"><div class="dt">${esc(e.title)}</div>
+    <div class="dm">${niceDate(e.date)}${e.time?" · "+fmtTime(e.time):""}${e.end?" – "+fmtTime(e.end):""} · ${CATS[e.cat].n} · ${sh.name}${sh.key!=="O"?" shift":""}</div>
+    ${e.details?`<pre>${esc(e.details)}</pre>`:""}</div>`;
+  if(e.link)h+=`<a class="bigbtn" href="${esc(e.link)}" target="_blank" rel="noopener">Open link ↗</a>`;
+  if(e.cat==="steel"||e.attach)h+=`<button class="bigbtn" id="dFile">Open the file 📄</button>`;
+  h+=`<div class="frm"><div class="frow"><label>Log</label><input id="dLog" value="${esc(e.log||"")}" placeholder="Result, weight, note…"></div></div>
+  <div style="display:flex;gap:10px">
+  <button class="bigbtn" id="dDone" style="flex:1;${e.status==="done"?"background:var(--trainGreen)":""}">${e.status==="done"?"Done ✓":"Done"}</button>
+  <button class="bigbtn" id="dSkip" style="flex:1;${e.status==="skipped"?"background:var(--red);color:#fff":"background:var(--card2);color:var(--red)"}">${e.status==="skipped"?"Skipped ✓":"Skip"}</button>
+  <button class="bigbtn" id="dEdit" style="flex:1;background:var(--card2);color:var(--accent)">Edit</button></div>
+  <button class="bigbtn ghost" id="dDel">Delete event</button>`;
+  openSheet(h);
+  const dl=sheet.querySelector("#dLog");dl.onchange=()=>{e.log=dl.value.trim();save();toast("Logged")};
+  sheet.querySelector("#dDone").onclick=()=>{e.status=e.status==="done"?"open":"done";e.done=e.status==="done";save();closeSheet();render()};
+  sheet.querySelector("#dSkip").onclick=()=>{e.status=e.status==="skipped"?"open":"skipped";e.done=e.status==="done";save();closeSheet();render()};
+  sheet.querySelector("#dEdit").onclick=()=>eventForm(e);
+  const df=sheet.querySelector("#dFile");if(df)df.onclick=()=>openEventFile(e);
+  const del=sheet.querySelector("#dDel");let armed=false;
+  del.onclick=()=>{if(!armed){armed=true;del.textContent="Tap again to delete";del.classList.add("danger");return}
+    events=events.filter(x=>x.id!==e.id);save();closeSheet();render();toast("Deleted")};
+}
+/* ================= event form ================= */
+function eventForm(e){
+  const isNew=!e.id;
+  openSheet(`<h2>${isNew?"New event":"Edit event"}</h2>
+  <div class="frm">
+    <div class="frow"><label>Title</label><input id="fTitle" value="${esc(e.title)}" placeholder="What's happening"></div>
+    <div class="frow"><label>Date</label><input type="date" id="fDate" value="${e.date}"></div>
+    <div class="frow"><label>Time</label><input type="time" id="fTime" value="${e.time||""}"></div>
+    <div class="frow"><label>End</label><input type="time" id="fEnd" value="${e.end||""}"></div>
+    <div class="frow"><label>Link</label><input id="fLink" type="url" value="${esc(e.link||"")}" placeholder="https://…"></div>
+    <div class="frow"><label>Note</label><input id="fNote" value="${esc(e.note||"")}" placeholder="Optional"></div>
+  </div>
+  <div class="frm"><div class="frow" style="align-items:flex-start"><label>Details</label><textarea id="fDetails" placeholder="Plan, exercises, what to do…">${esc(e.details||"")}</textarea></div></div>
+  <div class="sect">Category</div>
+  <div class="chips" id="fCats">${Object.keys(CATS).map(k=>`<button class="chip${e.cat===k?" on":""}" data-cat="${k}" style="${e.cat===k?`background:${CATS[k].c}`:""}">${CATS[k].n}</button>`).join("")}</div>
+  <div style="height:14px"></div>
+  <button class="bigbtn" id="fSave">${isNew?"Add event":"Save"}</button>`);
+  let cat=e.cat;
+  sheet.querySelectorAll("#fCats .chip").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;sheet.querySelectorAll("#fCats .chip").forEach(x=>{x.classList.toggle("on",x===b);x.style.background=x===b?CATS[cat].c:""})});
+  sheet.querySelector("#fSave").onclick=()=>{
+    const title=sheet.querySelector("#fTitle").value.trim();
+    if(!title){toast("Give it a title first");return}
+    const rec={id:e.id||uid(),title,date:sheet.querySelector("#fDate").value||todayStr(),
+      time:sheet.querySelector("#fTime").value,end:sheet.querySelector("#fEnd").value,cat,
+      note:sheet.querySelector("#fNote").value.trim(),details:sheet.querySelector("#fDetails").value.trim(),
+      link:sheet.querySelector("#fLink").value.trim(),attach:e.attach||"",done:e.done||false,log:e.log||""};
+    if(e.id)events=events.map(x=>x.id===e.id?rec:x);else events.push(rec);
+    save();render();eventFormDone(rec);
+  };
+}
+function eventFormDone(rec){openDetail(rec.id);render();toast("Saved")}
+/* ================= settings ================= */
+function settingsSheet(){
+  openSheet(`<h2>Settings</h2>
+  <div class="frm">
+    <div class="frow"><label>Theme</label><div class="chips" id="sTheme">${["auto","light","dark"].map(t=>`<button class="chip${settings.theme===t?" on":""}" data-th="${t}" style="${settings.theme===t?"background:var(--accent)":""}">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}</div></div>
+    <div class="frow"><label>Week starts</label><div class="chips" id="sWeek">${[[1,"Mon"],[6,"Sat"],[0,"Sun"]].map(([v,n])=>`<button class="chip${settings.weekStart===v?" on":""}" data-ws="${v}" style="${settings.weekStart===v?"background:var(--accent)":""}">${n}</button>`).join("")}</div></div>
+    <div class="frow"><label>Reminders</label><button class="chip" id="sNotif" style="${settings.remind?"background:var(--accent);color:#fff;border-color:transparent":""}">${settings.remind?"On":"Turn on"}</button></div>
+  </div>
+  <div class="sect">Backup</div>
+  <button class="bigbtn" id="sExport" style="background:var(--card2);color:var(--accent)">Export calendar (.ics)</button>
+  <button class="bigbtn" id="sImport" style="background:var(--card2);color:var(--accent)">Import .ics file</button>
+  <input type="file" id="icsFile" accept=".ics,text/calendar" style="display:none">
+  <div class="sect">Danger zone</div>
+  <button class="bigbtn ghost" id="sErase">Erase all data</button>`);
+  sheet.querySelectorAll("#sTheme .chip").forEach(b=>b.onclick=()=>{settings.theme=b.dataset.th;save();closeSheet();render()});
+  sheet.querySelectorAll("#sWeek .chip").forEach(b=>b.onclick=()=>{settings.weekStart=+b.dataset.ws;save();closeSheet();render()});
+  sheet.querySelector("#sNotif").onclick=async()=>{
+    if(!("Notification" in window)){toast("This browser has no notifications");return}
+    const p=await Notification.requestPermission();
+    if(p==="granted"){settings.remind=true;save();closeSheet();render();toast("Reminders on");
+      navigator.serviceWorker?.ready.then(r=>{r.periodicSync?.register("daybook-remind",{minInterval:60*60*1000}).catch(()=>{})}).catch(()=>{})}
+    else toast("Notifications were blocked");
+  };
+  sheet.querySelector("#sExport").onclick=exportICS;
+  sheet.querySelector("#sImport").onclick=()=>sheet.querySelector("#icsFile").click();
+  sheet.querySelector("#icsFile").onchange=importICS;
+  const er=sheet.querySelector("#sErase");let armed=false;
+  er.onclick=()=>{if(!armed){armed=true;er.textContent="Tap again to erase everything";er.classList.add("danger");return}
+    events=[];localStorage.removeItem(LS_SEED);save();location.reload()};
+}
+/* ================= reminders (best effort, app open) ================= */
+let timers=[];
+function scheduleReminders(){
+  timers.forEach(clearTimeout);timers=[];
+  if(!settings.remind||!("Notification" in window)||Notification.permission!=="granted")return;
+  const ds=todayStr(),now=Date.now();
+  evsOn(ds).forEach(e=>{
+    if(!e.time||e.done)return;
+    const[h,m]=e.time.split(":").map(Number);
+    const at=new Date();at.setHours(h,m,0,0);
+    const dt=at-now;if(dt<1000||dt>86400000)return;
+    timers.push(setTimeout(()=>notify(e),dt));
+  });
+}
+function notify(e){
+  const body=(e.details?e.details.split("\n")[0]:(e.note||CATS[e.cat].n));
+  const opts={body,tag:e.id,data:{url:deepLink(e.id)},icon:"icon-192.png",badge:"icon-192.png"};
+  if(navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(e.title,opts)).catch(()=>new Notification(e.title,opts));
+  else new Notification(e.title,opts);
+}
+/* ================= ICS ================= */
+function exportICS(){
+  let s="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Daybook//EN\r\n";
+  events.forEach(e=>{
+    const d=e.date.replace(/-/g,""),t=(e.time||"09:00").replace(":","")+"00";
+    s+="BEGIN:VEVENT\r\nUID:"+e.id+"@daybook\r\nDTSTART:"+d+"T"+t+"\r\n";
+    if(e.end)s+="DTEND:"+d+"T"+e.end.replace(":","")+"00\r\n";
+    s+="SUMMARY:"+escICS(e.title)+"\r\n";
+    s+="DESCRIPTION:"+escICS(deepLink(e.id)+(e.details?"\\n\\n"+e.details:""))+"\r\n";
+    if(e.link)s+="URL:"+e.link+"\r\n";
+    s+="END:VEVENT\r\n";
+  });
+  s+="END:VCALENDAR\r\n";
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"text/calendar"}));a.download="daybook.ics";a.click();
+  toast("Exported "+events.length+" events");
+}
+const escICS=s=>s.replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
+function importICS(ev){
+  const f=ev.target.files[0];if(!f)return;
+  f.text().then(txt=>{
+    const lines=txt.replace(/\r\n[ \t]/g,"").replace(/\n[ \t]/g,"").split(/\r?\n/);
+    let cur=null,n=0;
+    lines.forEach(l=>{
+      if(l==="BEGIN:VEVENT")cur={};
+      else if(l==="END:VEVENT"&&cur){
+        if(cur.title&&cur.date){events.push({id:uid(),title:cur.title,date:cur.date,time:cur.time||"",end:cur.end||"",cat:"personal",note:"",details:cur.desc||"",link:cur.url||"",attach:"",done:false,log:""});n++}
+        cur=null;
+      }else if(cur){
+        let m=l.match(/^SUMMARY[^:]*:(.*)$/);if(m)cur.title=unICS(m[1]);
+        m=l.match(/^DESCRIPTION[^:]*:(.*)$/);if(m)cur.desc=unICS(m[1]);
+        m=l.match(/^URL[^:]*:(.*)$/);if(m)cur.url=m[1].trim();
+        m=l.match(/^DTSTART[^:]*:(\d{8})T?(\d{4})?/);if(m){cur.date=m[1].slice(0,4)+"-"+m[1].slice(4,6)+"-"+m[1].slice(6,8);if(m[2])cur.time=m[2].slice(0,2)+":"+m[2].slice(2)}
+        m=l.match(/^DTEND[^:]*:\d{8}T(\d{4})/);if(m)cur.end=m[1].slice(0,2)+":"+m[1].slice(2);
+      }
+    });
+    save();closeSheet();render();toast(n?("Imported "+n+" events"):"No events found in that file");
+  });
+}
+const unICS=s=>s.replace(/\\n/g,"\n").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\\\\/g,"\\");
+/* ================= interactions ================= */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
+document.getElementById("btnAdd").onclick=()=>eventForm({id:"",title:"",date:selDay,time:"",end:"",cat:"task",note:"",details:"",link:"",attach:""});
+document.getElementById("btnSettings").onclick=settingsSheet;
+document.getElementById("btnToday").onclick=()=>{cursor=new Date();selDay=todayStr();render()};
+view.addEventListener("click",e=>{
+  const chk=e.target.closest("[data-chk]");
+  if(chk){e.stopPropagation();const ev=evById(chk.dataset.chk);ev.status=ev.status==="done"?"open":"done";ev.done=ev.status==="done";save();render();return}
+  const of=e.target.closest("[data-openfile]");
+  if(of){openEventFile(evById(of.dataset.openfile));return}
+  const fo=e.target.closest("[data-fopen]");
+  if(fo){openFile(fo.dataset.fopen);return}
+  const fd=e.target.closest("[data-fdel]");
+  if(fd){idbDel("files",fd.dataset.fdel).then(renderFiles);return}
+  const op=e.target.closest("[data-open]");
+  if(op){openDetail(op.dataset.open);return}
+  const day=e.target.closest("[data-day]");
+  if(day){selDay=day.dataset.day;cursor=parseD(selDay);calMode="day";render();return}
+  const seg=e.target.closest("[data-m]");
+  if(seg){calMode=seg.dataset.m;render();return}
+  const rot=e.target.closest("[data-rot]");
+  if(rot){const i=+rot.dataset.rot;const seq=["O","D","E","N"];const cur=settings.rot.pattern[i];settings.rot.pattern[i]=seq[(seq.indexOf(cur)+1)%seq.length];save();render();return}
+  if(e.target.id==="saveRot"){
+    settings.rot.anchor=document.getElementById("anchorIn").value||settings.rot.anchor;
+    for(const k of["D","E","N"])settings.rot.times[k]=[document.getElementById("t"+k+"0").value||settings.rot.times[k][0],document.getElementById("t"+k+"1").value||settings.rot.times[k][1]];
+    save();render();toast("Rotation saved");return}
+  const card=e.target.closest(".ev[data-id]");
+  if(card)openDetail(card.dataset.id);
+});
+let tx=0,ty=0;
+view.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+view.addEventListener("touchend",e=>{
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
+    const dir=dx<0?1:-1;
+    if(tab==="calendar"){
+      if(calMode==="month")cursor.setMonth(cursor.getMonth()+dir);
+      else{const d=parseD(selDay);d.setDate(d.getDate()+(calMode==="week"?7:1)*dir);selDay=dstr(d);cursor=d}
+      render();
+    }
+  }
+},{passive:true});
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),1800)}
+setInterval(()=>{applyTheme();if(tab==="calendar"&&calMode==="day")render()},60000);
+/* ================= boot + deep link ================= */
+render();
+(function(){
+  const m=location.hash.match(/^#\/event\/(.+)$/);
+  if(m){const e=evById(decodeURIComponent(m[1]));if(e){selDay=e.date;cursor=parseD(e.date);openDetail(e.id)}}
+})();
+window.addEventListener("hashchange",()=>{
+  const m=location.hash.match(/^#\/event\/(.+)$/);
+  if(m){const e=evById(decodeURIComponent(m[1]));if(e)openDetail(e.id)}
+});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>
