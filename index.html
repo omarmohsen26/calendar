@@ -185,7 +185,7 @@ const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
 const APP_VERSION="1.1.0";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
-let encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;
+let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
 const SEED=[
 {id:"pubfb-2026-11-25",title:"Eiffel Reel \u2014 Tiny Wins FB",date:"2026-11-25",time:"19:00",end:"",cat:"content",note:"",link:"https://www.facebook.com/tiny.wins.2026",attach:"",log:"",status:"open",done:false,details:"Post the Eiffel Reel on the Tiny Wins Facebook page.\nYouTube version: https://youtube.com/shorts/sZyE8uX7cvs\nPage: https://www.facebook.com/tiny.wins.2026"},
 {id:"tt-2026-11-26",title:"TikTok clip 3 post (reminder)",date:"2026-11-26",time:"00:55",end:"",cat:"task",note:"",link:"",attach:"",log:"",status:"open",done:false,details:"Post TikTok clip 3 (planned around 1am Cairo).\nAfter posting, edit this event and paste the clip link."},
@@ -301,7 +301,7 @@ function rToday(){
     <div><div class="sc-t">${sh.name}${sh.key!=="O"?" shift":""}</div>
     <div class="sc-s">${sh.key!=="O"?fmtTime(sh.start)+" – "+fmtTime(sh.end)+" · ":""}${status}</div>
     <div class="sc-s">${niceDate(ds)}</div></div></div>`;
-  h+=`<div class="enc" id="encLine">${ENCOURAGE[encIdx]}</div>`;
+  h+=`<div class="enc" id="encLine">${ENCOURAGE[getEncIdx()]}</div>`;
   if(allDone&&!localStorage.getItem("daybook.celebrated."+ds)){
     h+=`<div class="card celebrate" style="text-align:center"><div style="font-size:17px;font-weight:700;color:var(--success)">All done for today 🎉</div><div class="enc" style="text-align:center">You kept every promise on the list.</div>
     <button class="hbtn" id="celX" style="margin-top:8px">Nice</button></div>`;
@@ -684,7 +684,7 @@ view.addEventListener("click",e=>{
         else if([3,7,14,30].includes(qs)&&ev.cat==="steel")celebrate(qs+"-day Q&A streak! Keep the fire.",cx,cy);
         else if([3,7,14,30].includes(ws)&&ev.cat==="workout")celebrate(ws+"-day workout streak! Getting stronger.",cx,cy);
         else if(wasFirst)celebrate("First win of the day. That's the hard part.",cx,cy);
-        else celebrate(ENCOURAGE[encIdx=(encIdx+1)%ENCOURAGE.length],cx,cy);
+        else celebrate(ENCOURAGE[encIdx=(getEncIdx()+1)%ENCOURAGE.length],cx,cy);
       },320);
       return;
     }
@@ -714,8 +714,8 @@ let tx=0,ty=0,pull=0;
 view.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;pull=view.scrollTop<=0?e.touches[0].clientY:0},{passive:true});
 view.addEventListener("touchmove",e=>{
   if(pull&&tab==="today"&&e.touches[0].clientY-pull>80){
-    pull=0;encIdx=(encIdx+1)%ENCOURAGE.length;
-    const el=document.getElementById("encLine");if(el)el.textContent=ENCOURAGE[encIdx];
+    pull=0;encIdx=(getEncIdx()+1)%ENCOURAGE.length;
+    const el=document.getElementById("encLine");if(el)el.textContent=ENCOURAGE[getEncIdx()];
   }
 },{passive:true});
 view.addEventListener("touchend",e=>{
