@@ -185,11 +185,11 @@ html[data-theme="dark"] .bigbtn.danger{background:var(--red)!important;color:#ff
 .g-plan{border:1.5px dashed var(--sub)}
 .g-today{box-shadow:0 0 0 2px var(--accent)}
 .bento{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-.btile{background:var(--card);border-radius:16px;padding:14px 12px;box-shadow:0 2px 12px rgba(26,43,38,.06);position:relative;text-align:center;border:0;font:inherit;color:var(--text);cursor:pointer;width:100%}
+.btile{background:var(--card);border-radius:16px;padding:14px 12px;box-shadow:0 2px 12px rgba(26,43,38,.06);position:relative;text-align:center;border:0;font:inherit;color:var(--text);cursor:pointer;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .btile .bn{font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px}
 .btile .bn svg{width:20px;height:20px}
 .btile .bc{font-size:12px;color:var(--sub);margin-top:2px}
-.dchip{position:absolute;top:8px;right:8px;font-size:11px;font-weight:700;border-radius:999px;padding:2px 7px;background:var(--card2);color:var(--sub)}
+.dchip{align-self:flex-end;font-size:11px;font-weight:700;border-radius:999px;padding:2px 7px;background:var(--card2);color:var(--sub);margin:-6px -2px 4px 0;min-height:14px}
 .dchip.up{background:rgba(22,163,74,.14);color:var(--success)}
 html[data-theme="dark"] .dchip.up{background:rgba(74,222,128,.16)}
 .streakhero{text-align:center;padding:18px 0 8px}
@@ -239,7 +239,7 @@ const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. F
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
 const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
 const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
-const APP_VERSION="1.5.0";
+const APP_VERSION="1.5.1";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
 let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
