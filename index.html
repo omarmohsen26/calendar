@@ -80,7 +80,7 @@ nav button.on{color:var(--accent)}
 .seg button.on{background:var(--card2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .mgrid .wd{font-size:12px;font-weight:600;color:var(--sub);text-align:center;padding:6px 0}
-.mcell{aspect-ratio:.82;border-radius:10px;background:var(--card);padding:5px 4px 4px;display:flex;flex-direction:column;align-items:center;cursor:pointer;border:0;font:inherit;color:var(--text)}
+.mcell{height:58px;overflow:hidden;border-radius:10px;background:var(--card);padding:5px 4px 4px;display:flex;flex-direction:column;align-items:center;cursor:pointer;border:0;font:inherit;color:var(--text)}
 .mcell.dim{opacity:.35}
 .mcell .dn{font-size:16px;font-weight:600;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .mcell.today .dn{background:var(--accent);color:#fff}
@@ -482,7 +482,6 @@ function rQA(){
     h+=`<div class="empty">${next?"No Q&amp;A slot today. Day "+(qa.indexOf(next)+1)+" starts "+niceDate(next.date)+" at "+fmtTime(next.time)+".":"The rotation hasn't started yet."}<br>Steel isn't made in a day. Neither are you.</div>
     <button class="bigbtn small" id="qaPrep" style="background:var(--card);color:var(--steel)">Open the study folder</button>`;
   }
-  h+=`<a class="bigbtn small" href="${STUDY_FOLDER}" target="_blank" rel="noopener" style="background:var(--card);color:var(--steel)">Study folder (Drive)</a>`;
   h+=`<div class="sect">Upcoming</div>`;
   qa.filter(e=>e.date>=ds).slice(0,7).forEach(e=>{const i=qa.indexOf(e)+1;
     h+=`<div class="ev cat-steel${e.done?" done":""}" data-open="${e.id}"><div class="tm">${WD[wdIndex(parseD(e.date))]} ${parseD(e.date).getDate()}</div><div style="flex:1"><div class="tt">Day ${i} · Steel Q&amp;A</div><div class="ct">${fmtTime(e.time)}</div></div><button class="chk" data-chk="${e.id}"></button></div>`});
@@ -526,7 +525,7 @@ function openDetail(id){
     <div class="dm">${niceDate(e.date)}${e.time?" · "+fmtTime(e.time):""}${e.end?" – "+fmtTime(e.end):""} · ${CATS[e.cat].n} · ${sh.name}${sh.key!=="O"?" shift":""}</div>
     ${e.details?`<pre>${esc(e.details)}</pre>`:""}</div>`;
   if(e.link)h+=`<a class="bigbtn" href="${esc(e.link)}" target="_blank" rel="noopener">Open link ↗</a>`;
-  if(e.cat==="steel"||e.attach)h+=`<button class="bigbtn" id="dFile">Open the file 📄</button>`;
+  if((e.cat==="steel"||e.attach)&&!e.link)h+=`<button class="bigbtn" id="dFile">Open the file</button>`;
   h+=`<div class="frm"><div class="frow"><label>Log</label><input id="dLog" value="${esc(e.log||"")}" placeholder="Result, weight, note…"></div></div>
   <div style="display:flex;gap:10px">
   <button class="bigbtn" id="dDone" style="flex:1;${e.status==="done"?"background:var(--trainGreen)":""}">${e.status==="done"?"Done ✓":"Done"}</button>
