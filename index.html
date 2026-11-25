@@ -8,71 +8,75 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{
-  --bg:#FAF7F2; --card:#FFFFFF; --card2:#F5F1EA; --text:#22242C; --sub:#75706a; --sep:#EAE4DA;
-  --accent:#E8871E; --red:#ff3b30; --success:#22A35A;
+  --bg:#F7F7F8; --card:#FFFFFF; --card2:#F1F1F3; --text:#1A1D21; --sub:#5C6B64; --sep:#E9E5DC;
+  --accent:#F4633A; --red:#DC2626; --success:#16A34A; --celebrate:#FBBF24;
   --dayAmber:#D9B236; --eveOrange:#D97538; --nightBlue:#6987D9; --offGray:#8E929E; --trainGreen:#22A35A;
   --workout:#22A35A; --content:#D97538; --steel:#9A73E0; --task:#D9B236; --personal:#E0566F;
   --tintDay:rgba(217,178,54,.16); --tintEve:rgba(217,117,56,.16); --tintNight:rgba(105,135,217,.16); --tintOff:rgba(90,95,110,.10);
 }
 html[data-theme="dark"]{
-  --bg:#14161C; --card:#1D2029; --card2:#191C24; --text:#F2F3F7; --sub:#9BA1B0; --sep:#2C303C;
-  --accent:#FFB454; --success:#4ADE80;
+  --bg:#121417; --card:#1C2024; --card2:#23282E; --text:#F0F2F1; --sub:#93A19A; --sep:#2A2F35;
+  --accent:#FF8A66; --success:#4ADE80; --celebrate:#FBBF24;
   --dayAmber:#FFD23F; --eveOrange:#FF8C42; --nightBlue:#7C9EFF; --offGray:#5A5F6E; --trainGreen:#4ADE80;
   --workout:#4ADE80; --content:#FF8C42; --steel:#B18CFF; --task:#FFD23F; --personal:#FF7A93;
   --tintDay:rgba(255,210,63,.18); --tintEve:rgba(255,140,66,.18); --tintNight:rgba(124,158,255,.22); --tintOff:rgba(90,95,110,.22);
 }
 @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}50%{box-shadow:0 0 18px 2px rgba(74,222,128,.35)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}50%{box-shadow:0 0 18px 2px rgba(251,191,36,.4)}}
 @keyframes greenFlash{0%{background:rgba(74,222,128,.35)}100%{background:var(--card)}}
 @keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
 @keyframes confetti{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
-.ev .chk{transition:background .18s,border-color .18s}
+.ev .chk::after{transition:background .18s,border-color .18s}
 .ev.done .chk{animation:pop .35s ease}
 .ev.flash{animation:greenFlash .5s ease}
-.celebrate{animation:glowPulse 2.4s ease-in-out infinite;border:1px solid rgba(74,222,128,.4)}
+.celebrate{animation:glowPulse 2.4s ease-in-out infinite;border:1px solid rgba(251,191,36,.65);background:rgba(251,191,36,.07)}
 .streak{animation:jump .6s ease}
 .enc{font-size:14px;color:var(--sub);margin:2px 2px 0;line-height:1.4}
 .confetti-dot{position:fixed;width:8px;height:8px;border-radius:50%;z-index:99;pointer-events:none;animation:confetti .8s ease-out forwards}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums;overscroll-behavior-y:none}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums;overscroll-behavior-y:none}
 #app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative}
-header{padding:calc(env(safe-area-inset-top,0px) + 16px) 16px 8px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
-header h1{font-size:32px;font-weight:700;letter-spacing:-.5px;margin:0;line-height:1.1}
+header{padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 8px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+header h1{font-size:24px;font-weight:800;letter-spacing:-.4px;margin:0;line-height:1.1}
 header .hdr-actions{display:flex;gap:8px;align-items:center;padding-bottom:4px}
-.hbtn{min-width:48px;height:40px;border:0;border-radius:12px;background:var(--card);color:var(--accent);font-size:15px;font-weight:600;padding:0 12px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.hbtn{min-width:48px;height:44px;border:0;border-radius:14px;background:var(--card);color:var(--accent);font-size:15px;font-weight:600;padding:0 14px;cursor:pointer;box-shadow:0 2px 12px rgba(26,43,38,.06)}
 .hbtn.icon{width:48px;padding:0;display:flex;align-items:center;justify-content:center}
 .hbtn svg{width:22px;height:22px}
-main{flex:1;overflow-y:auto;padding:4px 16px 96px;-webkit-overflow-scrolling:touch}
+main{flex:1;overflow-y:auto;padding:4px 20px 110px;-webkit-overflow-scrolling:touch}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:40}
 nav .bar{max-width:480px;margin:0 auto;display:flex;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{flex:1;border:0;background:none;color:var(--sub);font-size:12px;font-weight:500;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px;cursor:pointer}
 nav button svg{width:24px;height:24px}
 nav button.on{color:var(--accent)}
-.card{background:var(--card);border-radius:16px;padding:14px 16px;margin:8px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin:10px 0;box-shadow:0 2px 12px rgba(26,43,38,.06)}
 .shift-card{display:flex;align-items:center;gap:14px}
 .shift-badge{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex:none}
 .shift-card .sc-t{font-size:17px;font-weight:700}
 .shift-card .sc-s{font-size:14px;color:var(--sub);margin-top:2px}
 .badge-D{background:var(--dayAmber);color:#5c4700}.badge-E{background:var(--eveOrange)}.badge-N{background:var(--nightBlue)}.badge-O{background:var(--offGray)}.badge-T{background:var(--trainGreen)}
-.ev{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:16px;padding:12px 14px;margin:8px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);border-left:5px solid var(--sub)}
+.ev{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:0 2px 12px rgba(26,43,38,.06);border-left:5px solid var(--sub)}
 .ev .tm{font-size:13px;color:var(--sub);width:52px;flex:none;padding-top:2px;text-align:right}
 .ev .tt{font-size:16px;font-weight:600;line-height:1.25}
 .ev .ct{font-size:12px;color:var(--sub);margin-top:2px}
 .ev .att{font-size:14px;margin-left:2px}
 .ev.done .tt{text-decoration:line-through;color:var(--sub)}
-.ev .chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--sep);flex:none;margin-left:auto;align-self:center;background:none;cursor:pointer}
-.ev.done .chk{border-color:var(--success);background:var(--success)}
+.ev .chk{width:48px;height:48px;border-radius:50%;border:0;flex:none;margin:-10px -8px -10px auto;align-self:center;background:none;cursor:pointer;position:relative;padding:0}
+.ev .chk::after{content:"";position:absolute;left:10px;top:10px;width:28px;height:28px;border-radius:50%;border:2px solid var(--sep);box-sizing:border-box}
+.ev.done .chk::after{content:"\2713";border-color:var(--success);background:var(--success);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .cat-workout{border-left-color:var(--workout)}.cat-content{border-left-color:var(--content)}.cat-steel{border-left-color:var(--steel)}.cat-task{border-left-color:var(--task)}.cat-personal{border-left-color:var(--personal)}
 .empty{padding:40px 24px;text-align:center;color:var(--sub);font-size:15px;line-height:1.5}
 .sect{font-size:13px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin:18px 4px 2px}
-.seg{display:flex;background:var(--card);border-radius:12px;padding:3px;margin:6px 0 10px}
-.seg button{flex:1;border:0;background:none;border-radius:9px;padding:9px 0;font-size:15px;font-weight:600;color:var(--sub);min-height:44px;cursor:pointer}
+.seg{display:flex;background:var(--card);border-radius:14px;padding:3px;margin:6px 0 10px}
+.seg button{flex:1;border:0;background:none;border-radius:11px;padding:9px 0;font-size:15px;font-weight:600;color:var(--sub);min-height:44px;cursor:pointer}
 .seg button.on{background:var(--card2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .ptag{font-size:10px;font-weight:700;color:var(--content);border:1px dashed var(--content);border-radius:6px;padding:0 5px;vertical-align:2px}
 .mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
@@ -110,7 +114,7 @@ nav button.on{color:var(--accent)}
 .legend b{display:inline-flex;width:22px;height:22px;border-radius:7px;color:#fff;align-items:center;justify-content:center;font-size:12px;margin-right:4px}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:none}
 .overlay.open{display:block}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg);border-radius:20px 20px 0 0;max-width:480px;margin:0 auto;max-height:88vh;max-height:88dvh;overflow-y:auto;transform:translateY(105%);padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg);border-radius:24px 24px 0 0;max-width:480px;margin:0 auto;max-height:88vh;max-height:88dvh;overflow-y:auto;transform:translateY(105%);padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
 .sheet{transition:transform .42s cubic-bezier(.34,1.4,.64,1)}
 .sheet.open{transform:translateY(0)}
 .grab{width:40px;height:5px;border-radius:3px;background:var(--sep);margin:6px auto 10px}
@@ -127,7 +131,7 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 .bigbtn{width:100%;border:0;border-radius:14px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;padding:14px;min-height:56px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
 .bigbtn.small{font-size:15px;min-height:48px;padding:10px}
 .danger{background:var(--red)!important;color:#fff!important}
-.ghost{background:var(--card);color:var(--red)}
+.ghost{background:var(--card);color:var(--sub)}
 .qa-hero{background:var(--card);border-radius:16px;padding:16px;margin:8px 0;border-left:5px solid var(--steel)}
 .qa-hero .d{font-size:13px;color:var(--steel);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
 .qa-hero .t{font-size:19px;font-weight:700;margin-top:4px}
@@ -139,6 +143,28 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 .filerow .fd{font-size:12px;color:var(--sub)}
 .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%}
 .toast.show{opacity:1}
+.greeting{font-size:32px;font-weight:800;letter-spacing:-.5px;margin:8px 2px 2px;line-height:1.15}
+.gcapt{font-size:13px;color:var(--sub);margin:2px 2px 4px}
+.foresight{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:0 2px 12px rgba(26,43,38,.06);font-size:14px;font-weight:500}
+.foresight svg{width:20px;height:20px;color:var(--accent);flex:none}
+.mstrip{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:none}
+.mstrip::-webkit-scrollbar{display:none}
+.msd{min-width:46px;border:0;border-radius:12px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit;color:var(--text);cursor:pointer;background:var(--card)}
+.msd .msw{font-size:11px;color:var(--sub);font-weight:600}
+.msd .msn{font-size:15px;font-weight:700;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.msd.td .msn{background:var(--accent);color:#fff}
+.msd.sel:not(.td) .msn{box-shadow:0 0 0 2px var(--accent)}
+.msd .msl{font-size:10px;font-weight:800;border-radius:5px;padding:0 5px;line-height:14px}
+.msd .msdots{display:flex;gap:2px;min-height:5px}
+.msd .msdots i{width:5px;height:5px;border-radius:50%;display:block}
+.nowcue{display:flex;align-items:center;gap:8px;margin:6px 4px}
+.nowcue i{flex:1;height:2px;background:var(--accent);border-radius:2px}
+.nowcue span{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+.streakchip{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--eveOrange);background:var(--card2);border-radius:999px;padding:1px 8px;vertical-align:2px;margin-left:6px}
+.streakchip svg{width:12px;height:12px}
+nav .fab{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;border:0;margin:-26px 4px 0;box-shadow:0 8px 18px rgba(244,99,58,.38);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+nav .fab svg{width:26px;height:26px}
+nav .fab:active{transform:scale(.94)}
 .detail-hero{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px}
 .detail-hero .dt{font-size:22px;font-weight:700;line-height:1.2}
 .detail-hero .dm{font-size:14px;color:var(--sub);margin-top:6px}
@@ -151,7 +177,7 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
     <h1 id="hdrTitle">Today</h1>
     <div class="hdr-actions">
       <button class="hbtn" id="btnToday" style="display:none">Today</button>
-      <button class="hbtn icon" id="btnAdd" aria-label="Add event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="hbtn icon" id="btnProgress" aria-label="Progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20v-7M12 20V6M19 20v-11"/></svg></button>
       <button class="hbtn icon" id="btnSettings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.65 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.12 3V3a2 2 0 1 1 4 0v.09c0 .68.4 1.3 1.03 1.56.6.26 1.32.13 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08c.26.63.88 1.03 1.56 1.03H21a2 2 0 1 1 0 4h-.09c-.68 0-1.3.4-1.51 1.03z"/></svg></button>
     </div>
   </header>
@@ -159,9 +185,9 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
   <nav><div class="bar">
     <button data-tab="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Today</button>
     <button data-tab="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Calendar</button>
+    <button class="fab" id="btnFab" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <button data-tab="shifts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>Shifts</button>
     <button data-tab="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7.5h8M8 11h5"/></svg>Q&amp;A</button>
-    <button data-tab="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20v-7M12 20V6M19 20v-11"/></svg>Progress</button>
   </div></nav>
 </div>
 <div class="overlay" id="overlay"></div>
@@ -178,7 +204,7 @@ const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. F
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
 const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
 const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
-const APP_VERSION="1.3.0";
+const APP_VERSION="1.4.0";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
 let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
@@ -344,36 +370,74 @@ const TITLES={today:"Today",calendar:"Calendar",shifts:"Shifts",qa:"Q&A",progres
 function render(){applyTheme();
   document.getElementById("hdrTitle").textContent=TITLES[tab];
   document.getElementById("btnToday").style.display=(tab==="calendar")?"":"none";
-  document.getElementById("btnAdd").style.display=(tab==="today"||tab==="calendar")?"":"none";
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
   ({today:rToday,calendar:rCalendar,shifts:rShifts,qa:rQA,progress:rProgress}[tab])();
   scheduleReminders();
 }
 /* ================= TODAY ================= */
 function rToday(){
-  const ds=todayStr(),sh=shiftFor(ds),list=evsOn(ds);
-  const now=new Date(),hm=pad(now.getHours())+":"+pad(now.getMinutes());
-  let status;
-  if(sh.key==="O")status="Day off. Rest days grow muscles too.";
-  else{const s=sh.start,e=sh.end,over=e<s;const inShift=over?(hm>=s||hm<e):(hm>=s&&hm<e);
-    status=inShift?("On shift now · ends "+fmtTime(e)):(hm<s?("Starts "+fmtTime(s)):"Done for today")}
+  const ds0=todayStr(),ds=selDay||ds0,viewToday=ds===ds0;
+  const sh=shiftFor(ds0),now=new Date(),hm=pad(now.getHours())+":"+pad(now.getMinutes());
+  const hr=now.getHours(),greet=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+  let h=`<div class="greeting">${greet}, Omar</div>
+  <div class="gcapt">${niceDate(ds0)} &nbsp;\u00b7&nbsp; <b class="badge-${sh.key}" style="border-radius:6px;padding:1px 7px;font-size:12px">${sh.key}</b> ${sh.name}${sh.key!=="O"?" shift \u00b7 "+fmtTime(sh.start)+" \u2013 "+fmtTime(sh.end):""}</div>
+  <div class="enc" id="encLine">${ENCOURAGE[getEncIdx()]}</div>`;
+  h+=foresightHTML();
+  h+=monthStripHTML();
+  const list=evsOn(ds).slice().sort((a,b)=>(a.time||"99:99")<(b.time||"99:99")?-1:1);
   const doneCount=list.filter(e=>e.status==="done").length;
   const allDone=list.length>0&&doneCount===list.length;
-  let h=`<div class="card shift-card"><div class="shift-badge badge-${sh.key}">${sh.key}</div>
-    <div><div class="sc-t">${sh.name}${sh.key!=="O"?" shift":""}</div>
-    <div class="sc-s">${sh.key!=="O"?fmtTime(sh.start)+" – "+fmtTime(sh.end)+" · ":""}${status}</div>
-    <div class="sc-s">${niceDate(ds)}</div></div></div>`;
-  h+=`<div class="enc" id="encLine">${ENCOURAGE[getEncIdx()]}</div>`;
   if(allDone&&!localStorage.getItem("daybook.celebrated."+ds)){
-    h+=`<div class="card celebrate" style="text-align:center"><div style="font-size:17px;font-weight:700;color:var(--success)">All done for today 🎉</div><div class="enc" style="text-align:center">You kept every promise on the list.</div>
+    h+=`<div class="card celebrate" style="text-align:center"><div style="font-size:17px;font-weight:700">All done for today</div><div class="enc" style="text-align:center">You kept every promise on the list.</div>
     <button class="hbtn" id="celX" style="margin-top:8px">Nice</button></div>`;
   }
-  h+=`<div class="sect">Today's items${list.length?" · "+doneCount+"/"+list.length:""}</div>`;
-  if(!list.length)h+=`<div class="empty">Nothing scheduled today.<br>Enjoy the calm, Captain — tomorrow is wide open.</div>`;
-  list.forEach(e=>{h+=evCard(e)});
+  h+=`<div class="sect">${viewToday?"Today's items":niceDate(ds)}${list.length?" \u00b7 "+doneCount+"/"+list.length:""}</div>`;
+  if(!list.length){
+    h+=`<div class="card" style="text-align:center;padding:22px">
+      <div class="ev" style="opacity:.45;pointer-events:none;margin:0 0 12px;text-align:left"><div class="tm">09:00</div><div style="flex:1"><div class="tt">A small plan starts with one line</div><div class="ct">Task</div></div><span class="chk"></span></div>
+      <div style="color:var(--sub);font-size:14px;margin-bottom:12px">Nothing scheduled for ${niceDate(ds)}. Enjoy the calm, or plant one tiny win.</div>
+      <button class="bigbtn small" id="addEmpty">Add something</button></div>`;
+  }else{
+    const qaS=streakOf("steel"),woS=streakOf("workout");
+    let nowIns=false;
+    list.forEach(e=>{
+      if(viewToday&&!nowIns&&e.time&&e.time>hm){h+=`<div class="nowcue"><i></i><span>now</span></div>`;nowIns=true}
+      h+=evCard(e,e.cat==="steel"?qaS:e.cat==="workout"?woS:0);
+    });
+  }
+  if(!viewToday)h+=`<button class="hbtn" id="backToday" style="width:100%;margin-top:6px">Back to today</button>`;
   view.innerHTML=h;
+  const strip=document.getElementById("mStrip");if(strip){const td=strip.querySelector(".msd.td");if(td)strip.scrollLeft=Math.max(0,td.offsetLeft-70)}
+  const bt=document.getElementById("backToday");if(bt)bt.onclick=()=>{selDay=todayStr();cursor=parseD(selDay);render()};
+  const ae=document.getElementById("addEmpty");if(ae)ae.onclick=()=>eventForm({id:"",title:"",date:ds,time:"",end:"",cat:"task",note:"",details:"",link:"",attach:""});
   const cx=document.getElementById("celX");
   if(cx)cx.onclick=()=>{localStorage.setItem("daybook.celebrated."+ds,"1");render()};
+}
+function foresightHTML(){
+  const now=new Date(),hm=pad(now.getHours())+":"+pad(now.getMinutes());
+  const tmr=new Date(now);tmr.setDate(tmr.getDate()+1);
+  const shT=shiftFor(todayStr()),shM=shiftFor(dstr(tmr));
+  let msg="";
+  if(shM.key==="N"&&shT.key!=="N")msg="Night shift tomorrow \u2014 wind down by 2 PM today.";
+  else if(shM.key==="D"&&shT.key!=="D")msg="Early start tomorrow \u2014 a calm evening helps.";
+  else if(shT.key==="N"&&hm<"16:00")msg="Night shift tonight \u2014 a nap before 4 PM will carry you through.";
+  else if(shT.key==="O"&&shM.key==="O")msg="Full rest day \u2014 recovery is training too.";
+  if(!msg)return "";
+  return `<div class="foresight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><div>${msg}</div></div>`;
+}
+function monthStripHTML(){
+  const t=todayStr(),base=parseD(selDay||t),y=base.getFullYear(),m=base.getMonth(),days=new Date(y,m+1,0).getDate();
+  let h=`<div class="mstrip" id="mStrip">`;
+  for(let d=1;d<=days;d++){
+    const dsr=y+"-"+pad(m+1)+"-"+pad(d),sh=shiftFor(dsr),ev=evsOn(dsr);
+    let dots="";ev.slice(0,3).forEach(x=>{dots+=`<i style="background:${CATS[x.cat].c}"></i>`});
+    h+=`<button class="msd tint-${sh.key}${dsr===t?" td":""}${dsr===selDay?" sel":""}" data-sday="${dsr}">
+      <span class="msw">${WD[wdIndex(new Date(y,m,d))][0]}</span>
+      <span class="msn">${d}</span>
+      <span class="msl badge-${sh.key}">${sh.key}</span>
+      <span class="msdots">${dots}</span></button>`;
+  }
+  return h+"</div>";
 }
 function celebrate(msg,x,y){
   toast(msg);
@@ -388,11 +452,13 @@ function celebrate(msg,x,y){
     document.body.appendChild(d);setTimeout(()=>d.remove(),900);
   }
 }
-function evCard(e){
-  const st=e.status==="skipped"?` · moved to tomorrow`:"";
-  return `<div class="ev cat-${e.cat}${e.done?" done":""}" data-id="${e.id}">
-    <div class="tm">${e.time?fmtTime(e.time):"—"}</div>
-    <div style="flex:1"><div class="tt">${esc(e.title)}${e.pubState==="proposed"?' <span class="ptag">proposed</span>':""}</div><div class="ct">${CATS[e.cat].n}${st}${e.note?" · "+esc(e.note):""}</div></div>
+function evCard(e,streakN){
+  const st=e.status==="skipped"?` \u00b7 moved to tomorrow`:"";
+  const flame='<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+  const chip=streakN>0?` <span class="streakchip">${flame}${streakN}</span>`:"";
+  return `<div class="ev cat-${e.cat}${e.done?" done":""}" data-id="${e.id}" data-tog="${e.id}">
+    <div class="tm">${e.time?fmtTime(e.time):"\u2014"}</div>
+    <div style="flex:1"><div class="tt" data-open="${e.id}">${esc(e.title)}${e.pubState==="proposed"?' <span class="ptag">proposed</span>':""}${chip}</div><div class="ct">${CATS[e.cat].n}${st}${e.note?" \u00b7 "+esc(e.note):""}</div></div>
     <button class="chk" data-chk="${e.id}" aria-label="Mark done"></button></div>`;
 }
 /* ================= PROGRESS ================= */
@@ -432,8 +498,8 @@ function rProgress(){
     <div style="color:var(--sub);font-size:14px;margin-top:2px">this week · ${w.done} done · ${w.skip} moved · ${w.open} still open</div>
     <div class="enc" style="margin-top:8px">${pep}</div></div>
     <div style="display:flex;gap:8px">
-    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--steel)">&#128293; ${qaS}</div><div style="font-size:12px;color:var(--sub)">Q&amp;A streak</div></div>
-    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--workout)">&#128170; ${woS}</div><div style="font-size:12px;color:var(--sub)">Workout streak</div></div></div>
+    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--steel);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>${qaS}</div><div style="font-size:12px;color:var(--sub)">Q&amp;A streak</div></div>
+    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--workout);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l1.767-1.768a2 2 0 1 1 2.828 2.829z"/><path d="m21.5 21.5-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1 2.828-2.829l2.829 2.828a2 2 0 1 1-2.828 2.829z"/><path d="M6.343 3.515a2 2 0 1 1 2.829-2.828l6.364 6.364a2 2 0 1 1-2.829 2.828l1.768 1.768a2 2 0 1 1-2.829 2.829z"/></svg>${woS}</div><div style="font-size:12px;color:var(--sub)">Workout streak</div></div></div>
     <div class="card">${bar(w,"This week")}${bar(w1,"Last week")}${bar(w2,"2 weeks ago")}${bar(w3,"3 weeks ago")}</div>`;
   const skipped=events.filter(e=>e.status==="skipped").sort((a,b)=>a.date>b.date?-1:1).slice(0,5);
   if(skipped.length){h+=`<div class="sect">Recently skipped</div>`;
@@ -552,7 +618,7 @@ function rQA(){
   const ds=todayStr(),todayEv=qa.find(e=>e.date===ds);
   let streak=0;{let d=new Date();if(!todayEv||!todayEv.done)d.setDate(d.getDate()-1);
     for(;;){const e=qa.find(x=>x.date===dstr(d));if(e&&e.done){streak++;d.setDate(d.getDate()-1)}else break}}
-  let h=streak?`<span class="streak">&#128293; ${streak}-day streak</span>`:"";
+  let h=streak?`<span class="streak"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>${streak}-day streak</span>`:"";
   if(todayEv){const dayN=qa.indexOf(todayEv)+1;
     h+=`<div class="qa-hero"><div class="d">Today's steel Q&amp;A · Day ${dayN}</div><div class="t">${esc(todayEv.title)}</div>
       <div class="s">${fmtTime(todayEv.time)} · Read the file, answer out loud, then mark it done.</div></div>
@@ -747,8 +813,9 @@ function importICS(ev){
 }
 const unICS=s=>s.replace(/\\n/g,"\n").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\\\\/g,"\\");
 /* ================= interactions ================= */
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
-document.getElementById("btnAdd").onclick=()=>eventForm({id:"",title:"",date:selDay,time:"",end:"",cat:"task",note:"",details:"",link:"",attach:""});
+document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;if(tab==="today"){selDay=todayStr();cursor=parseD(selDay)}render()});
+document.getElementById("btnFab").onclick=()=>eventForm({id:"",title:"",date:selDay,time:"",end:"",cat:"task",note:"",details:"",link:"",attach:""});
+document.getElementById("btnProgress").onclick=()=>{tab="progress";render()};
 document.getElementById("btnSettings").onclick=settingsSheet;
 document.getElementById("btnToday").onclick=()=>{cursor=new Date();selDay=todayStr();render()};
 view.addEventListener("click",e=>{
@@ -792,6 +859,10 @@ view.addEventListener("click",e=>{
     settings.rot.anchor=document.getElementById("anchorIn").value||settings.rot.anchor;
     for(const k of["D","E","N"])settings.rot.times[k]=[document.getElementById("t"+k+"0").value||settings.rot.times[k][0],document.getElementById("t"+k+"1").value||settings.rot.times[k][1]];
     save();render();toast("Rotation saved");return}
+  const tg=e.target.closest("[data-tog]");
+  if(tg){const c=tg.querySelector("[data-chk]");if(c)c.click();return}
+  const sd=e.target.closest("[data-sday]");
+  if(sd){selDay=sd.dataset.sday;cursor=parseD(selDay);render();return}
   const card=e.target.closest(".ev[data-id]");
   if(card)openDetail(card.dataset.id);
 });
