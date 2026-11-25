@@ -204,7 +204,7 @@ const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. F
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
 const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
 const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
-const APP_VERSION="1.4.0";
+const APP_VERSION="1.4.1";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
 let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
@@ -676,9 +676,9 @@ function openDetail(id){
   h+=`<div class="frm"><div class="frow"><label>Log</label><input id="dLog" value="${esc(e.log||"")}" placeholder="Result, weight, note…"></div></div>
   <div style="display:flex;gap:10px">
   <button class="bigbtn" id="dDone" style="flex:1;${e.status==="done"?"background:var(--trainGreen)":""}">${e.status==="done"?"Done ✓":"Done"}</button>
-  <button class="bigbtn" id="dSkip" style="flex:1;${e.status==="skipped"?"background:var(--red);color:#fff":"background:var(--card2);color:var(--red)"}">${e.status==="skipped"?"Skipped ✓":"Skip"}</button>
+  <button class="bigbtn" id="dSkip" style="flex:1;${e.status==="skipped"?"background:var(--sep);color:var(--text)":"background:var(--card2);color:var(--sub)"}">${e.status==="skipped"?"Skipped ✓":"Skip"}</button>
   <button class="bigbtn" id="dEdit" style="flex:1;background:var(--card2);color:var(--accent)">Edit</button></div>
-  <button class="bigbtn ghost" id="dDel">Delete event</button>`;
+  <button class="bigbtn ghost" id="dDel" style="color:var(--red)">Delete event</button>`;
   openSheet(h);
   const dl=sheet.querySelector("#dLog");dl.onchange=()=>{e.log=dl.value.trim();save();toast("Logged")};
   sheet.querySelector("#dDone").onclick=()=>{e.status=e.status==="done"?"open":"done";e.done=e.status==="done";save();closeSheet();render()};
