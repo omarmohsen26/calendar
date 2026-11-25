@@ -153,7 +153,7 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 /* ================= data ================= */
 const LS_E="daybook.events.v2", LS_S="daybook.settings.v1", LS_SEED="daybook.seeded.v2";
 const CATS={workout:{n:"Workout",c:"var(--workout)"},content:{n:"Publish",c:"var(--content)"},steel:{n:"Steel Q&A",c:"var(--steel)"},task:{n:"Task",c:"var(--task)"},personal:{n:"Personal",c:"var(--personal)"}};
-const SHIFT_META={D:{n:"Morning",c:"var(--dayAmber)"},E:{n:"Afternoon",c:"var(--eveOrange)"},N:{n:"Night",c:"var(--nightBlue)"},O:{n:"Off",c:"var(--offGray)"},T:{n:"Training",c:"var(--trainGreen)"}};
+const SHIFT_META={D:{name:"Morning",c:"var(--dayAmber)"},E:{name:"Afternoon",c:"var(--eveOrange)"},N:{name:"Night",c:"var(--nightBlue)"},O:{name:"Off",c:"var(--offGray)"},T:{name:"Training",c:"var(--trainGreen)"}};
 const WARM="Warm-up 8-10 min: light cardio + joint circles, then 2 warm-up sets of the first move (50% / 70% of working weight). Rest 90-120s between big sets, 60s between small ones. Stop every set 1-2 reps before failure.";
 const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. Floor press (barbell, lying on floor) - 3 x 8-12\n3. Bent-over barbell row - 3 x 8-12\n4. Dumbbell overhead press - 2 x 10-12\n5. Plank - 3 x 30-60 sec\n\n"+WARM;
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
@@ -404,7 +404,7 @@ function rShifts(){
   h+=`<div class="sect">Rotation (${p.length} days) — tap a day to change it</div><div class="rot">`;
   p.forEach((k,i)=>{h+=`<button class="badge-${k}" data-rot="${i}">${k}</button>`});
   h+=`</div><div class="frm"><div class="frow"><label>Cycle starts</label><input type="date" id="anchorIn" value="${settings.rot.anchor}"></div>`;
-  for(const k of["D","E","N"])h+=`<div class="frow"><label>${SHIFT_META[k].n}</label><input type="time" id="t${k}0" value="${settings.rot.times[k][0]}"><span style="color:var(--sub)">to</span><input type="time" id="t${k}1" value="${settings.rot.times[k][1]}"></div>`;
+  for(const k of["D","E","N"])h+=`<div class="frow"><label>${SHIFT_META[k].name}</label><input type="time" id="t${k}0" value="${settings.rot.times[k][0]}"><span style="color:var(--sub)">to</span><input type="time" id="t${k}1" value="${settings.rot.times[k][1]}"></div>`;
   h+=`</div><button class="bigbtn" id="saveRot">Save rotation</button><div class="sect">Next 14 days</div>`;
   const t=new Date();
   for(let i=0;i<14;i++){const d=new Date(t);d.setDate(d.getDate()+i);const ds=dstr(d),sh=shiftFor(ds);
