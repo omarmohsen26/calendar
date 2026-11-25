@@ -37,11 +37,7 @@ html[data-theme="dark"]{
 .streak{animation:jump .6s ease}
 .enc{font-size:14px;color:var(--sub);margin:2px 2px 0;line-height:1.4}
 .confetti-dot{position:fixed;width:8px;height:8px;border-radius:50%;z-index:99;pointer-events:none;animation:confetti .8s ease-out forwards}
-#updBanner{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%);z-index:95;background:var(--accent);color:#14161C;border:0;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}
-#updBanner.show{display:block}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-#updBanner{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%);z-index:95;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:600;box-shadow:0 4px 14px rgba(10,132,255,.4);display:none}
-#updBanner.show{display:block}
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums;overscroll-behavior-y:none}
@@ -170,7 +166,6 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 <div class="overlay" id="overlay"></div>
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
-<button id="updBanner">New version ready. Tap to reload.</button>
 <script>
 "use strict";
 /* ================= data ================= */
@@ -182,7 +177,7 @@ const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. F
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
 const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
 const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
-const APP_VERSION="1.1.0";
+const APP_VERSION="1.2.0";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
 let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
@@ -238,6 +233,53 @@ let settings=Object.assign({weekStart:1,theme:"auto",remind:false,
 let events=load(LS_E)||[];
 if(!localStorage.getItem(LS_SEED)){events=SEED.concat(events.filter(e=>!/^seed-/.test(e.id)));localStorage.setItem(LS_SEED,"1");save()}
 events.forEach(e=>{if(!e.status)e.status=e.done?"done":"open";e.done=e.status==="done"});
+
+/* ================= recurrence engine (rules -> events through 2027) ================= */
+const GEN_START="2026-11-25",GEN_END="2027-12-31",GEN_V=2;
+const RULE_IDS=/^(qa|wo|wi|pub)-\d{4}-\d{2}-\d{2}$/;
+const WO_TIME={D:"16:00",E:"09:00",N:"16:00",O:"10:00",T:"10:00"};
+const PUB_TIME={2:"19:00",3:"21:00",4:"19:00",6:"21:00"};
+function genEvent(id){
+  const m=id.match(/^([a-z]+)-(\d{4}-\d{2}-\d{2})$/);if(!m)return null;
+  const kind=m[1],ds=m[2];
+  if(ds<GEN_START||ds>GEN_END)return null;
+  const base={id,date:ds,end:"",note:"",link:"",attach:"",log:"",status:"open",done:false};
+  if(kind==="qa"){if(ds<"2026-11-26")return null;
+    const n=Math.round((parseD(ds)-parseD("2026-11-26"))/864e5)+1;
+    return Object.assign(base,{title:"Daily 20 Q&A steel file",time:shiftFor(ds).key==="D"?"10:00":"18:00",cat:"steel",
+      details:"Day "+n+" of the steel Q&A rotation. 20 questions, about 15 minutes.\n1. Open the file (button below).\n2. Read each question, answer out loud before checking.\n3. Mark it done when finished."})}
+  if(kind==="wo"){const n=Math.round((parseD(ds)-parseD("2026-11-26"))/864e5);if(n<0||n%2)return null;
+    const s=Math.floor(n/2)%3;
+    return Object.assign(base,{title:"Workout - Session "+PLAN_NAMES[s]+" (proposed)",time:WO_TIME[shiftFor(ds).key]||"10:00",cat:"workout",details:PLANS[s]})}
+  if(kind==="wi"){if(parseD(ds).getDay()!==5||ds<"2026-11-27")return null;
+    return Object.assign(base,{title:"Weekly weigh-in + hair photo",time:"08:00",cat:"workout",
+      details:"Morning weigh-in: after the bathroom, before food, same scale.\n1. Log the number in the Log field below.\n2. Take the hair-shed photo (shower drain) after your shower.\n3. Send both to Farid for the Friday check-in."})}
+  if(kind==="pub"){if(ds<"2026-11-26")return null;const t=PUB_TIME[parseD(ds).getDay()];if(!t)return null;
+    return Object.assign(base,{title:"Tiny Wins Reel slot (story TBD)",time:t,cat:"content",
+      details:"Post today's Tiny Wins Reel (YouTube Shorts + Facebook).\nAfter posting, edit this event and paste the video link so one tap opens it."})}
+  return null;
+}
+if(settings.genV!==GEN_V){
+  const old={};events.forEach(e=>{old[e.id]=e});
+  const del=settings.deletedIds||[];
+  const out=[];
+  let gds=GEN_START;
+  while(gds<=GEN_END){
+    for(const p of ["qa","wo","wi","pub"]){
+      const rid=p+"-"+gds;if(del.includes(rid))continue;
+      const g=genEvent(rid);if(!g)continue;
+      const o=old[rid];delete old[rid];
+      if(o&&o.__edited){out.push(o);continue}
+      if(o){g.done=!!o.done;g.status=o.status||(o.done?"done":"open");g.log=o.log||"";if(o.link)g.link=o.link;if(o.attach)g.attach=o.attach}
+      out.push(g);
+    }
+    const dd=parseD(gds);dd.setDate(dd.getDate()+1);
+    gds=dd.getFullYear()+"-"+pad(dd.getMonth()+1)+"-"+pad(dd.getDate());
+  }
+  Object.keys(old).forEach(k=>{if(!del.includes(k))out.push(old[k])});
+  events=out;settings.genV=GEN_V;save();
+}
+
 function load(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 function save(){localStorage.setItem(LS_E,JSON.stringify(events));localStorage.setItem(LS_S,JSON.stringify(settings));mirror()}
 function uid(){return "e"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -515,7 +557,7 @@ function openEventFile(e){
 /* ================= detail sheet ================= */
 const sheet=document.getElementById("sheet"),overlay=document.getElementById("overlay");
 function openSheet(html){sheet.innerHTML=`<div class="grab"></div>`+html;sheet.classList.add("open");overlay.classList.add("open")}
-function closeSheet(){sheet.classList.remove("open");overlay.classList.remove("open");history.replaceState(null,"",location.pathname)}
+function closeSheet(){sheet.classList.remove("open");overlay.classList.remove("open");history.replaceState(null,"",location.pathname);setTimeout(maybeReloadUpdate,350)}
 overlay.onclick=closeSheet;
 function openDetail(id){
   const e=evById(id);if(!e)return;
@@ -540,7 +582,9 @@ function openDetail(id){
   const df=sheet.querySelector("#dFile");if(df)df.onclick=()=>openEventFile(e);
   const del=sheet.querySelector("#dDel");let armed=false;
   del.onclick=()=>{if(!armed){armed=true;del.textContent="Tap again to delete";del.classList.add("danger");return}
-    events=events.filter(x=>x.id!==e.id);save();closeSheet();render();toast("Deleted")};
+    events=events.filter(x=>x.id!==e.id);
+    if(RULE_IDS.test(e.id)){settings.deletedIds=settings.deletedIds||[];if(!settings.deletedIds.includes(e.id))settings.deletedIds.push(e.id)}
+    save();closeSheet();render();toast("Deleted")};
 }
 /* ================= event form ================= */
 function eventForm(e){
@@ -567,7 +611,8 @@ function eventForm(e){
     const rec={id:e.id||uid(),title,date:sheet.querySelector("#fDate").value||todayStr(),
       time:sheet.querySelector("#fTime").value,end:sheet.querySelector("#fEnd").value,cat,
       note:sheet.querySelector("#fNote").value.trim(),details:sheet.querySelector("#fDetails").value.trim(),
-      link:sheet.querySelector("#fLink").value.trim(),attach:e.attach||"",done:e.done||false,log:e.log||""};
+      link:sheet.querySelector("#fLink").value.trim(),attach:e.attach||"",done:e.done||false,log:e.log||"",status:e.status||(e.done?"done":"open")};
+    if(RULE_IDS.test(rec.id))rec.__edited=true;
     if(e.id)events=events.map(x=>x.id===e.id?rec:x);else events.push(rec);
     save();render();eventFormDone(rec);
   };
@@ -746,21 +791,22 @@ fetch("updates.json?cb="+Date.now()).then(r=>r.ok?r.json():null).then(u=>{
   events.forEach(e=>{if(u.links[e.id]&&!e.link){e.link=u.links[e.id];changed=true}});
   if(changed){save();render()}
 }).catch(()=>{});
-/* service worker + stale-version banner */
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js").then(reg=>{
-    const show=()=>document.getElementById("updBanner").classList.add("show");
-    if(reg.waiting)show();
-    reg.addEventListener("updatefound",()=>{const w=reg.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)show()})});
-    reg.update().catch(()=>{});
-  });
-  let refreshing=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});
+/* service worker: updates install themselves; reload only at a safe moment (never mid-edit) */
+let pendingUpdate=false,updateReloaded=false;
+function maybeReloadUpdate(){
+  if(!pendingUpdate||updateReloaded)return;
+  if(sheet.classList.contains("open"))return; // never while a sheet/editor is open
+  if(document.visibilityState!=="visible")return; // wait for next open
+  updateReloaded=true;
+  try{sessionStorage.setItem("daybook.justUpdated","1")}catch(e){}
+  location.reload();
 }
-document.getElementById("updBanner").onclick=()=>{
-  navigator.serviceWorker?.getRegistrations().then(rs=>rs.forEach(r=>r.waiting?.postMessage("skipWaiting")));
-  setTimeout(()=>location.reload(),800);
-};
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").then(reg=>{reg.update().catch(()=>{})});
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{pendingUpdate=true;maybeReloadUpdate()});
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")maybeReloadUpdate()});
+}
+try{if(sessionStorage.getItem("daybook.justUpdated")){sessionStorage.removeItem("daybook.justUpdated");setTimeout(()=>toast("Updated to the latest version"),600)}}catch(e){}
 </script>
 </body>
 </html>
