@@ -22,7 +22,7 @@
   --tintDay:rgba(217,178,54,.16); --tintEve:rgba(217,117,56,.16); --tintNight:rgba(105,135,217,.16); --tintOff:rgba(90,95,110,.10);
 }
 html[data-theme="dark"]{
-  --bg:#121417; --card:#1C2024; --card2:#23282E; --text:#F0F2F1; --sub:#93A19A; --sep:#2A2F35;
+  --bg:#000000; --card:#16181C; --card2:#1E2127; --text:#FFFFFF; --sub:#8E8E93; --sep:#26292E;
   --accent:#FF8A66; --success:#4ADE80; --celebrate:#FBBF24;
   --dayAmber:#FFD23F; --eveOrange:#FF8C42; --nightBlue:#7C9EFF; --offGray:#5A5F6E; --trainGreen:#4ADE80;
   --workout:#4ADE80; --content:#FF8C42; --steel:#B18CFF; --task:#FFD23F; --personal:#FF7A93;
@@ -115,7 +115,7 @@ nav button.on{color:var(--accent)}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:none}
 .overlay.open{display:block}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg);border-radius:24px 24px 0 0;max-width:480px;margin:0 auto;max-height:88vh;max-height:88dvh;overflow-y:auto;transform:translateY(105%);padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
-.sheet{transition:transform .42s cubic-bezier(.34,1.4,.64,1)}
+.sheet{transition:transform .28s cubic-bezier(.16,1,.3,1)}
 .sheet.open{transform:translateY(0)}
 .grab{width:40px;height:5px;border-radius:3px;background:var(--sep);margin:6px auto 10px}
 .sheet h2{font-size:20px;margin:4px 0 12px}
@@ -145,7 +145,7 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 .toast.show{opacity:1}
 .greeting{font-size:32px;font-weight:800;letter-spacing:-.5px;margin:8px 2px 2px;line-height:1.15}
 .gcapt{font-size:13px;color:var(--sub);margin:2px 2px 4px}
-.foresight{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:0 2px 12px rgba(26,43,38,.06);font-size:14px;font-weight:500}
+.foresight{display:flex;gap:10px;align-items:center;background:rgba(244,99,58,.05);border:1px solid var(--sep);border-radius:16px;padding:12px 14px;margin:10px 0;font-size:14px;font-weight:500}
 .foresight svg{width:20px;height:20px;color:var(--accent);flex:none}
 .mstrip{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:none}
 .mstrip::-webkit-scrollbar{display:none}
@@ -165,6 +165,41 @@ textarea#fDetails{min-height:110px;resize:vertical;line-height:1.45}
 nav .fab{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;border:0;margin:-26px 4px 0;box-shadow:0 8px 18px rgba(244,99,58,.38);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
 nav .fab svg{width:26px;height:26px}
 nav .fab:active{transform:scale(.94)}
+html[data-theme="dark"] .card,html[data-theme="dark"] .ev,html[data-theme="dark"] .hbtn,html[data-theme="dark"] .foresight,html[data-theme="dark"] .btile,html[data-theme="dark"] .habitgrid,html[data-theme="dark"] .qa-hero,html[data-theme="dark"] .detail-hero{box-shadow:none}
+html[data-theme="dark"] .bigbtn{background:#FFFFFF;color:#000000;border-radius:999px;min-height:52px;font-weight:700}
+html[data-theme="dark"] .bigbtn.small{min-height:48px}
+html[data-theme="dark"] .bigbtn.danger{background:var(--red)!important;color:#fff!important}
+@keyframes riseIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.entry-anim{opacity:0;animation:riseIn .28s ease-out forwards}
+.mbar{display:flex;gap:3px;margin:10px 2px 4px}
+.mbar i{flex:1;height:4px;border-radius:2px;background:var(--sep)}
+.mbar i.on{background:var(--accent)}
+.mline{font-size:13px;color:var(--sub);margin:0 2px}
+.habitgrid{background:var(--card);border-radius:16px;padding:14px 16px;margin:-4px 0 10px;box-shadow:0 2px 12px rgba(26,43,38,.06)}
+.habitgrid .gh{font-size:13px;color:var(--sub);margin-bottom:10px}
+.habitgrid .gh b{color:var(--text);font-size:15px}
+.gwrap{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.gcell{aspect-ratio:1;border-radius:6px;box-sizing:border-box}
+.g-done{background:var(--success)}
+.g-miss,.g-rest{border:1px solid var(--sep)}
+.g-plan{border:1.5px dashed var(--sub)}
+.g-today{box-shadow:0 0 0 2px var(--accent)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.btile{background:var(--card);border-radius:16px;padding:14px 12px;box-shadow:0 2px 12px rgba(26,43,38,.06);position:relative;text-align:center;border:0;font:inherit;color:var(--text);cursor:pointer;width:100%}
+.btile .bn{font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px}
+.btile .bn svg{width:20px;height:20px}
+.btile .bc{font-size:12px;color:var(--sub);margin-top:2px}
+.dchip{position:absolute;top:8px;right:8px;font-size:11px;font-weight:700;border-radius:999px;padding:2px 7px;background:var(--card2);color:var(--sub)}
+.dchip.up{background:rgba(22,163,74,.14);color:var(--success)}
+html[data-theme="dark"] .dchip.up{background:rgba(74,222,128,.16)}
+.streakhero{text-align:center;padding:18px 0 8px}
+.streakhero svg{width:44px;height:44px;color:var(--eveOrange)}
+.streakhero .shn{font-size:56px;font-weight:800;line-height:1.05;margin-top:6px}
+.streakhero .shc{font-size:14px;color:var(--sub)}
+.streakhero .shm{font-size:14px;font-weight:600;color:var(--accent);margin-top:10px}
+.shweek{display:flex;gap:6px;justify-content:center;margin-top:16px}
+.shweek .gcell{width:30px}
+.shweek .gwl{font-size:11px;color:var(--sub);text-align:center;margin-top:3px}
 .detail-hero{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px}
 .detail-hero .dt{font-size:22px;font-weight:700;line-height:1.2}
 .detail-hero .dm{font-size:14px;color:var(--sub);margin-top:6px}
@@ -204,7 +239,7 @@ const PLAN_A="SESSION A - full body\n1. Goblet squat (dumbbell) - 3 x 8-12\n2. F
 const PLAN_B="SESSION B - full body\n1. Romanian deadlift (barbell) - 3 x 8-12\n2. Dumbbell bench press (or incline) - 3 x 8-12\n3. One-arm dumbbell row on bench - 3 x 10-12 each side\n4. Bulgarian split squat - 2 x 8-12 each leg\n5. EZ-bar biceps curl - 2 x 10-15\n6. EZ-bar skull crusher - 2 x 10-15\n\n"+WARM;
 const PLAN_C="SESSION C - full body\n1. Front squat or goblet squat - 3 x 10-15\n2. Push-ups (or close-grip bench) - 3 x to 1-2 before failure\n3. Barbell hip thrust on bench - 3 x 10-15\n4. Underhand-grip barbell row - 3 x 10-12\n5. Dumbbell lateral raise - 2 x 12-20\n6. Crunch or leg raise - 3 x 12-15\n\n"+WARM;
 const PLANS=[PLAN_A,PLAN_B,PLAN_C], PLAN_NAMES=["A","B","C"];
-const APP_VERSION="1.4.1";
+const APP_VERSION="1.5.0";
 const STUDY_FOLDER="https://drive.google.com/drive/folders/1tSeSl_czpwRWeceVTUhACamUNQHb85yp";
 const ENCOURAGE=["Small steps count double on night shift.","You showed up. That's the hard part.","One win today is still a win.","Momentum > motivation.","Your future self just smiled.","Progress, not perfection.","Another brick in the wall you're building.","Done is better than planned.","Rest days grow muscles too.","You kept a promise to yourself.","Tiny wins, big year.","Skip happened. Tomorrow is wide open.","The streak is a tool, not a judge.","Look how far this month has come.","Steel isn't made in a day. Neither are you."];
 let encIdx;function getEncIdx(){if(encIdx===undefined)encIdx=parseD(todayStr()).getDate()%ENCOURAGE.length;return encIdx;}
@@ -379,14 +414,22 @@ function rToday(){
   const ds0=todayStr(),ds=selDay||ds0,viewToday=ds===ds0;
   const sh=shiftFor(ds0),now=new Date(),hm=pad(now.getHours())+":"+pad(now.getMinutes());
   const hr=now.getHours(),greet=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
-  let h=`<div class="greeting">${greet}, Omar</div>
-  <div class="gcapt">${niceDate(ds0)} &nbsp;\u00b7&nbsp; <b class="badge-${sh.key}" style="border-radius:6px;padding:1px 7px;font-size:12px">${sh.key}</b> ${sh.name}${sh.key!=="O"?" shift \u00b7 "+fmtTime(sh.start)+" \u2013 "+fmtTime(sh.end):""}</div>
-  <div class="enc" id="encLine">${ENCOURAGE[getEncIdx()]}</div>`;
-  h+=foresightHTML();
-  h+=monthStripHTML();
   const list=evsOn(ds).slice().sort((a,b)=>(a.time||"99:99")<(b.time||"99:99")?-1:1);
   const doneCount=list.filter(e=>e.status==="done").length;
   const allDone=list.length>0&&doneCount===list.length;
+  const EA=window._entryDone?"":'entry-anim';
+  const ed=i=>window._entryDone?"":` style="animation-delay:${i*40}ms"`;
+  let h=`<div class="greeting ${EA}"${ed(0)}>${greet}, Omar</div>
+  <div class="gcapt ${EA}"${ed(1)}>${niceDate(ds0)} &nbsp;\u00b7&nbsp; <b class="badge-${sh.key}" style="border-radius:6px;padding:1px 7px;font-size:12px">${sh.key}</b> ${sh.name}${sh.key!=="O"?" shift \u00b7 "+fmtTime(sh.start)+" \u2013 "+fmtTime(sh.end):""}</div>`;
+  if(list.length&&viewToday){
+    const segs=list.map(e=>`<i class="${e.status==="done"?"on":""}"></i>`).join("");
+    const line=doneCount===0?ENCOURAGE[getEncIdx()]:allDone?"Everything done. Savor it.":`You're on a roll \u2014 ${doneCount} of ${list.length} done.`;
+    h+=`<div class="mbar ${EA}"${ed(2)}>${segs}</div><div class="mline ${EA}"${ed(3)} id="encLine">${line}</div>`;
+  }else{
+    h+=`<div class="enc ${EA}"${ed(2)} id="encLine">${ENCOURAGE[getEncIdx()]}</div>`;
+  }
+  const _fore=foresightHTML();if(_fore)h+=_fore.replace('class="foresight"',`class="foresight ${EA}"${ed(4)}`);
+  h+=monthStripHTML().replace('class="mstrip"',`class="mstrip ${EA}"${ed(5)}`);
   if(allDone&&!localStorage.getItem("daybook.celebrated."+ds)){
     h+=`<div class="card celebrate" style="text-align:center"><div style="font-size:17px;font-weight:700">All done for today</div><div class="enc" style="text-align:center">You kept every promise on the list.</div>
     <button class="hbtn" id="celX" style="margin-top:8px">Nice</button></div>`;
@@ -399,14 +442,17 @@ function rToday(){
       <button class="bigbtn small" id="addEmpty">Add something</button></div>`;
   }else{
     const qaS=streakOf("steel"),woS=streakOf("workout");
-    let nowIns=false;
+    let nowIns=false,ri=0;
     list.forEach(e=>{
       if(viewToday&&!nowIns&&e.time&&e.time>hm){h+=`<div class="nowcue"><i></i><span>now</span></div>`;nowIns=true}
-      h+=evCard(e,e.cat==="steel"?qaS:e.cat==="workout"?woS:0);
+      let card=evCard(e,e.cat==="steel"?qaS:e.cat==="workout"?woS:-1);
+      if(EA&&ri<4){card=card.replace('class="ev ','class="ev '+EA+' ').replace('data-id=','style="animation-delay:'+((6+ri)*40)+'ms" data-id=');ri++}
+      h+=card;
     });
   }
   if(!viewToday)h+=`<button class="hbtn" id="backToday" style="width:100%;margin-top:6px">Back to today</button>`;
   view.innerHTML=h;
+  window._entryDone=true;
   const strip=document.getElementById("mStrip");if(strip){const td=strip.querySelector(".msd.td");if(td)strip.scrollLeft=Math.max(0,td.offsetLeft-70)}
   const bt=document.getElementById("backToday");if(bt)bt.onclick=()=>{selDay=todayStr();cursor=parseD(selDay);render()};
   const ae=document.getElementById("addEmpty");if(ae)ae.onclick=()=>eventForm({id:"",title:"",date:ds,time:"",end:"",cat:"task",note:"",details:"",link:"",attach:""});
@@ -455,11 +501,49 @@ function celebrate(msg,x,y){
 function evCard(e,streakN){
   const st=e.status==="skipped"?` \u00b7 moved to tomorrow`:"";
   const flame='<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
-  const chip=streakN>0?` <span class="streakchip">${flame}${streakN}</span>`:"";
+  const chip=streakN>=0?` <span class="streakchip" data-grid="${e.cat}" title="Tap for 30-day grid">${flame}${streakN}</span>`:"";
   return `<div class="ev cat-${e.cat}${e.done?" done":""}" data-id="${e.id}" data-tog="${e.id}">
     <div class="tm">${e.time?fmtTime(e.time):"\u2014"}</div>
     <div style="flex:1"><div class="tt" data-open="${e.id}">${esc(e.title)}${e.pubState==="proposed"?' <span class="ptag">proposed</span>':""}${chip}</div><div class="ct">${CATS[e.cat].n}${st}${e.note?" \u00b7 "+esc(e.note):""}</div></div>
     <button class="chk" data-chk="${e.id}" aria-label="Mark done"></button></div>`;
+}
+/* ================= 30-DAY GRID + STREAK HERO ================= */
+function gridHTML(cat){
+  const goal=cat==="steel"?7:3,t=todayStr();
+  let cells="",done=0;
+  for(let i=29;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);const ds=dstr(d);
+    const ev=events.find(x=>x.date===ds&&x.cat===cat);
+    let cls;
+    if(ev&&ev.status==="done"){cls="g-done";done++}
+    else if(ds>=t&&ev)cls="g-plan";
+    else if(ev)cls="g-miss";
+    else cls="g-rest";
+    cells+=`<span class="gcell ${cls}${ds===t?" g-today":""}"></span>`;
+  }
+  return `<div class="habitgrid"><div class="gh"><b>${done}</b> done in the last 30 days \u00b7 goal ${goal}/wk</div><div class="gwrap">${cells}</div></div>`;
+}
+function streakSheet(cat){
+  const s=streakOf(cat),name=cat==="steel"?"Q&A":"Workout";
+  const miles=[7,14,30,60,100,200,365],next=miles.find(m=>m>s),left=next?next-s:0;
+  const [ws,we]=weekBounds(0),t=todayStr();
+  let cells="";
+  for(let d=parseD(ws);dstr(d)<=we;d.setDate(d.getDate()+1)){
+    const ds=dstr(d),ev=events.find(x=>x.date===ds&&x.cat===cat);
+    let cls;
+    if(ev&&ev.status==="done")cls="g-done";
+    else if(ds>=t&&ev)cls="g-plan";
+    else if(ev)cls="g-miss";
+    else cls="g-rest";
+    cells+=`<div><span class="gcell ${cls}${ds===t?" g-today":""}" style="display:block"></span><div class="gwl">${WD[wdIndex(d)][0]}</div></div>`;
+  }
+  openSheet(`<h2>${name} streak</h2>
+  <div class="streakhero">
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+    <div class="shn">${s}</div><div class="shc">days strong</div>
+    <div class="shm">${left>0?`${left} more day${left>1?"s":""} to unlock ${next}`:"Milestone unlocked"}</div>
+    <div class="shweek">${cells}</div></div>
+  <div style="height:12px"></div>`);
 }
 /* ================= PROGRESS ================= */
 function weekBounds(off=0){
@@ -488,25 +572,40 @@ function streakOf(cat){
 function rProgress(){
   const w=weekStats(0),w1=weekStats(1),w2=weekStats(2),w3=weekStats(3);
   const qaS=streakOf("steel"),woS=streakOf("workout");
-  const bar=(st,lab)=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13px;color:var(--sub)"><span>${lab}</span><span>${st.done}/${st.done+st.skip} done${st.open?" · "+st.open+" open":""}</span></div>
+  const hasData=events.some(e=>e.status==="done"||e.status==="skipped");
+  if(!hasData){
+    view.innerHTML=`<div class="card" style="text-align:center;padding:26px 20px;margin-top:18px">
+      <div class="bento" style="opacity:.45;pointer-events:none">
+        <div class="btile"><div class="bn">--%</div><div class="bc">This week</div></div>
+        <div class="btile"><div class="bn">--</div><div class="bc">Q&amp;A streak</div></div>
+        <div class="btile"><div class="bn">--</div><div class="bc">Workout streak</div></div></div>
+      <div style="color:var(--sub);font-size:14px;margin:14px 0 14px">Your progress story starts with the first check mark. Done items build this screen automatically.</div>
+      <button class="bigbtn small" id="pGoToday">Open Today</button></div>`;
+    document.getElementById("pGoToday").onclick=()=>{tab="today";selDay=todayStr();render()};
+    return;
+  }
+  const bar=(st,lab)=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13px;color:var(--sub)"><span>${lab}</span><span>${st.done}/${st.done+st.skip} done${st.open?" \u00b7 "+st.open+" open":""}</span></div>
     <div style="height:10px;border-radius:6px;background:var(--sep);margin-top:5px;overflow:hidden;display:flex">
     <div style="width:${st.pct}%;background:var(--success)"></div>
     <div style="width:${(st.done+st.skip)?100-st.pct:0}%;background:var(--offGray);opacity:.5"></div></div></div>`;
-  const pep=(w.done+w.skip)===0?"Fresh week. Pick one small thing today.":w.pct>=70?"Strong week. Keep the rhythm.":w.pct>=40?"Building momentum — one done at a time.":"One win today is still a win.";
-  let h=`<div class="card" style="text-align:center;padding:20px">
-    <div style="font-size:52px;font-weight:800;color:var(--accent)">${w.done+w.skip?w.pct+"%":"—"}</div>
-    <div style="color:var(--sub);font-size:14px;margin-top:2px">this week · ${w.done} done · ${w.skip} moved · ${w.open} still open</div>
-    <div class="enc" style="margin-top:8px">${pep}</div></div>
-    <div style="display:flex;gap:8px">
-    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--steel);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>${qaS}</div><div style="font-size:12px;color:var(--sub)">Q&amp;A streak</div></div>
-    <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--workout);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l1.767-1.768a2 2 0 1 1 2.828 2.829z"/><path d="m21.5 21.5-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1 2.828-2.829l2.829 2.828a2 2 0 1 1-2.828 2.829z"/><path d="M6.343 3.515a2 2 0 1 1 2.829-2.828l6.364 6.364a2 2 0 1 1-2.829 2.828l1.768 1.768a2 2 0 1 1-2.829 2.829z"/></svg>${woS}</div><div style="font-size:12px;color:var(--sub)">Workout streak</div></div></div>
-    <div class="card">${bar(w,"This week")}${bar(w1,"Last week")}${bar(w2,"2 weeks ago")}${bar(w3,"3 weeks ago")}</div>`;
+  const pep=(w.done+w.skip)===0?"Fresh week. Pick one small thing today.":w.pct>=70?"Strong week. Keep the rhythm.":w.pct>=40?"Building momentum \u2014 one done at a time.":"One win today is still a win.";
+  const delta=(w.done+w.skip)&&(w1.done+w1.skip)?w.pct-w1.pct:null;
+  const dchip=delta==null?"":delta>0?`<span class="dchip up">+${delta}%</span>`:`<span class="dchip">${delta}%</span>`;
+  const flame='<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+  const bell='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l1.767-1.768a2 2 0 1 1 2.828 2.829z"/><path d="m21.5 21.5-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1 2.828-2.829l2.829 2.828a2 2 0 1 1-2.828 2.829z"/><path d="M6.343 3.515a2 2 0 1 1 2.829-2.828l6.364 6.364a2 2 0 1 1-2.829 2.828l1.768 1.768a2 2 0 1 1-2.829 2.829z"/></svg>';
+  let h=`<div class="enc" style="margin:8px 2px 2px">${pep}</div>
+  <div class="bento">
+    <div class="btile">${dchip}<div class="bn" style="color:var(--accent)">${w.done+w.skip?w.pct+"%":"\u2014"}</div><div class="bc">this week</div></div>
+    <button class="btile" data-streak="steel"><div class="bn" style="color:var(--steel)">${flame}${qaS}</div><div class="bc">Q&amp;A streak</div></button>
+    <button class="btile" data-streak="workout"><div class="bn" style="color:var(--workout)">${bell}${woS}</div><div class="bc">Workout streak</div></button>
+  </div>
+  <div class="card">${bar(w,"This week")}${bar(w1,"Last week")}${bar(w2,"2 weeks ago")}${bar(w3,"3 weeks ago")}</div>`;
   const skipped=events.filter(e=>e.status==="skipped").sort((a,b)=>a.date>b.date?-1:1).slice(0,5);
   if(skipped.length){h+=`<div class="sect">Recently skipped</div>`;
-    skipped.forEach(e=>{h+=`<div class="ev cat-${e.cat}" data-open="${e.id}"><div class="tm">${WD[wdIndex(parseD(e.date))]} ${parseD(e.date).getDate()}</div><div style="flex:1"><div class="tt" style="font-size:15px">${esc(e.title)}${e.pubState==="proposed"?' <span class="ptag">proposed</span>':""}</div><div class="ct">${CATS[e.cat].n} — tap to reschedule or do it</div></div></div>`})}
+    skipped.forEach(e=>{h+=`<div class="ev cat-${e.cat}" data-open="${e.id}"><div class="tm">${WD[wdIndex(parseD(e.date))]} ${parseD(e.date).getDate()}</div><div style="flex:1"><div class="tt" style="font-size:15px">${esc(e.title)}${e.pubState==="proposed"?' <span class="ptag">proposed</span>':""}</div><div class="ct">${CATS[e.cat].n} \u2014 tap to reschedule or do it</div></div></div>`})}
   h+=`<div class="sect">Coaching</div>
     <button class="bigbtn" id="pShare">Share progress with Farid</button>
-    <div style="font-size:13px;color:var(--sub);text-align:center;padding:0 12px 8px">Sends a short summary you approve first — nothing leaves the phone on its own.</div>`;
+    <div style="font-size:13px;color:var(--sub);text-align:center;padding:0 12px 8px">Sends a short summary you approve first \u2014 nothing leaves the phone on its own.</div>`;
   view.innerHTML=h;
   document.getElementById("pShare").onclick=shareProgress;
 }
@@ -845,6 +944,14 @@ view.addEventListener("click",e=>{
   if(fo){openFile(fo.dataset.fopen);return}
   const fd=e.target.closest("[data-fdel]");
   if(fd){idbDel("files",fd.dataset.fdel).then(renderFiles);return}
+  const gr=e.target.closest("[data-grid]");
+  if(gr){e.stopPropagation();const row=gr.closest(".ev");
+    const nx=row&&row.nextElementSibling;
+    if(nx&&nx.classList.contains("habitgrid"))nx.remove();
+    else if(row)row.insertAdjacentHTML("afterend",gridHTML(gr.dataset.grid));
+    return}
+  const st2=e.target.closest("[data-streak]");
+  if(st2){streakSheet(st2.dataset.streak);return}
   const op=e.target.closest("[data-open]");
   if(op){openDetail(op.dataset.open);return}
   const day=e.target.closest("[data-day]");
@@ -885,7 +992,7 @@ view.addEventListener("touchend",e=>{
     }
   }
 },{passive:true});
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),1800)}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3000)}
 setInterval(()=>{applyTheme();if(tab==="calendar"&&calMode==="day")render()},60000);
 /* ================= boot + deep link ================= */
 render();
